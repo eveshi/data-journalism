@@ -1,8 +1,9 @@
 import React from 'react';
+import classes from './posts.css';
 
 const posts = (props) => {
     return (
-        <div>
+        <div className={classes.posts}>
             <p>example</p>
         </div>
     )
