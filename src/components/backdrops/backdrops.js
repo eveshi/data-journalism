@@ -5,7 +5,8 @@ const backdrops = (props) => {
     return (       
         <div 
             className={classes.backdrops}
-            style={props.show?{}:{display:'none'}}>
+            style={props.show?{}:{display:'none'}}
+            onClick={props.click}>
             {props.children}        
         </div>)
     

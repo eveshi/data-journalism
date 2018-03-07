@@ -24,6 +24,12 @@ class Toolbar extends Component {
         }))
     }
 
+    hideMenu = () => {
+        this.setState((prevState) => ({
+            show: ! prevState.show
+        }))
+    }
+
     render() {return (
         <Aux>
             <div className={classes.toolbar}>
@@ -31,7 +37,9 @@ class Toolbar extends Component {
                 <p>数据新闻</p>
             </div>
             <div>
-                <Backdrops show={this.state.show}/>
+                <Backdrops 
+                    show={this.state.show}
+                    click={this.hideMenu}/>
                 <Sidebar 
                     show={this.state.show}
                     menu={this.state.menu}
