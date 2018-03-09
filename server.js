@@ -18,7 +18,7 @@ app.post('/api/postdata', (req, res) => {
     co(function*(){
         const client = yield MongoClient.connect(mongoUrl);
         console.log("Connected correctly to server");
-        
+
         const db = client.db('data-jour')      
         const r = yield db.collection('posts').insertOne(req.body);
         assert.equal(1, r.insertedCount);
@@ -26,13 +26,15 @@ app.post('/api/postdata', (req, res) => {
     }).catch(function(err) {
         console.log(err.stack);
       });
-    // MongoClient.connect(mongoUrl, (err, client) => {
+    // MongoClient.connect(mongoUrl, async(err, client) => {
     //     const db = client.db('data-jour');
-    //     const r = db.collection('posts').insertOne(req.body);
-    //     // assert.equal(1, r.insertedCount);
+    //     const r = await db.collection('posts').insertOne(req.body);
+    //     assert.equal(1, r.insertedCount);
     //     db.close()
-    // }).catch((err) => {
-    //     console.log(err.stack)
+
+    //     if(err){
+    //         console.log(err.stack)
+    //     }
     // })
 });
 

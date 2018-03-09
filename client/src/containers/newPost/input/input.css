@@ -1,0 +1,6 @@
+.inputContent {
+    overflow: hidden; 
+    word-wrap: break-word; 
+    resize: none; 
+    height: 160px;
+}

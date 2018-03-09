@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from '../../axios_data';
+import marked from 'marked';
 import Input from './input/input';
 import classes from './newPost.css';
 
@@ -59,20 +60,27 @@ class NewPost extends Component {
             postData.push(postElement)
         }
 
+        const contentValue = this.state.postData.content.value
+        const contentHtml = marked(contentValue)
+        // const contentHtml = content.replace(/\r\n/g, '<br/>')
+        console.log(contentHtml)
+
         return(
             <div className={classes.newPost}>
-                <form onSubmit={this.submitHandler}>
+                <form>
                     {postData.map((el) => {
                         return (<Input
                             key={el.id}
                             name={el.id}
+                            inputType={el.inputType}
                             value={el.value}
                             placeholder={el.placeholder}
                             change={(event) => this.changeHandler(event, el.id)} />)}
                     )}
-                    <button>提交</button>
                 </form>
-                <button onClick={this.clickHandler}>dian</button>
+                <pre><div dangerouslySetInnerHTML={ {__html: contentHtml} } /></pre>
+                <p>基于Markdown输入</p>
+                <button onClick={this.clickHandler}>提交</button>
             </div>
         )
     }

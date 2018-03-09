@@ -1,4 +1,5 @@
 import React from 'react';
+import classes from './input.css';
 
 const inputValue = (props) => {
     const type = props.inputType;
@@ -12,15 +13,12 @@ const inputValue = (props) => {
             break;
         case 'textarea':
             InputContent = <textarea
+                className = {classes.inputContent}
                 placeholder={props.placeholder}
                 value={props.value}
                 onChange={props.change}  />;
             break;
-        default:
-            InputContent = <input
-                placeholder={props.placeholder}
-                value={props.value}
-                onChange={props.change}  />; 
+        default: 
             break;     
     }
 
