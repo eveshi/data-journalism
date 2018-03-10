@@ -9,9 +9,15 @@ class allPost extends Component {
 
     componentWillMount(){
         const posts = this.state.posts
-        axios.get('/api/getPost',(req,res) => {
 
-        })
+        // axios.get('/api/getPost',(req,res) => {
+
+        // })
+    }
+
+    clickHandler = async() =>{
+        const response = await axios.get('/api/getPost',{})
+        console.log(response.data)
     }
 
     render(){
@@ -24,6 +30,7 @@ class allPost extends Component {
                         </div>
                     )
                 })}
+                <button onClick={this.clickHandler}>按一下</button>
             </div>
         )
     }

@@ -48,7 +48,7 @@ class NewPost extends Component {
         }
         console.log(postWillBeSent)
         const request = await axios.post('/api/sendPost',{
-            mainConetent: postWillBeSent
+            mainContent: postWillBeSent
         })
 
     }

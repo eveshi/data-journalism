@@ -20,14 +20,24 @@ app.post('/api/sendPost', (req, res) => {
             console.log(err.stack)
         }
         const db = client.db('data-jour');
-        const r = await db.collection('posts').insertOne(req.body);
-        assert.equal(1, r.insertedCount);
-        db.close()
+        const addPost = await db.collection('posts').insertOne(req.body);
+        assert.equal(1, addPost.insertedCount);
+        client.close()
     })
 });
 
-// app.get('/api/getPost', (req, res) => {
-    
-// })
+app.get('/api/getPost', (req, res) => {
+    MongoClient.connect(mongoUrl, async(err, client) => {
+        if(err){
+            console.log(err.stack)
+        }
+        const db = client.db('data-jour');
+        const postQuery = await db.collection('posts').find().skip(0).limit(5).toArray()
+        console.log(postQuery)
+        client.close()
+
+        res.send(postQuery);
+    })
+})
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
