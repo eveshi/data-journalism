@@ -3,4 +3,6 @@
     word-wrap: break-word; 
     resize: none; 
     height: 160px;
+    width: 80%;
+    margin-top: 10px;
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from '../../axios_data';
+import axios from '../../../../axios_data';
 import marked from 'marked';
 import Input from './input/input';
 import classes from './newPost.css';
@@ -7,6 +7,14 @@ import classes from './newPost.css';
 class NewPost extends Component {
     state = {
         postData: {
+            user: {
+                inputType: null,
+                value: 'admin',
+            },
+            userProfile: {
+                inputType: null,
+                value: '../../../../assets/profilePic/2.jpg',
+            },
             title: {
                 inputType: 'text',
                 placeholder: '标题',
@@ -17,29 +25,33 @@ class NewPost extends Component {
                 placeholder: '输入内容……',
                 value: '',
             },
+            date: {
+                inputType: null,
+                value: null,
+            }
         },
         update: true,
     }
 
     submitHandler = async() => {
-        console.log(this.state.postData.title.value)
-
-        const title = this.state.postData.title.value
-        const content = this.state.postData.content.value
-
-        const request = await axios.post('/api/postdata',{
-            user: 'admin',
-            title: title,
-            content: content,
+        let postData = this.state.postData
+        const date = Date.now()
+        postData.date.value = date
+        console.log(date)
+        const postWillBeSent = []
+        for (let key in postData) {
+            let postElement = {
+                id: key,
+                value: postData[key].value
+            }
+            postWillBeSent.push(postElement)
+        }
+        console.log(postWillBeSent)
+        const request = await axios.post('/api/sendPost',{
+            mainConetent: postWillBeSent
         })
 
     }
-
-    clickHandler = async() => {
-        const response = await axios.get('/api/test')
-        console.log(response.data)
-    }
-    
 
     changeHandler = (event, key) => {
         const postData = this.state.postData
@@ -62,8 +74,6 @@ class NewPost extends Component {
 
         const contentValue = this.state.postData.content.value
         const contentHtml = marked(contentValue)
-        // const contentHtml = content.replace(/\r\n/g, '<br/>')
-        console.log(contentHtml)
 
         return(
             <div className={classes.newPost}>
@@ -78,9 +88,9 @@ class NewPost extends Component {
                             change={(event) => this.changeHandler(event, el.id)} />)}
                     )}
                 </form>
-                <pre><div dangerouslySetInnerHTML={ {__html: contentHtml} } /></pre>
+                <div dangerouslySetInnerHTML={ {__html: contentHtml} } />
                 <p>基于Markdown输入</p>
-                <button onClick={this.clickHandler}>提交</button>
+                <button onClick={this.submitHandler}>提交</button>
             </div>
         )
     }

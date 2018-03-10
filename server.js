@@ -12,34 +12,22 @@ const mongoUrl = 'mongodb://localhost:27017/data-jour';
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/api/postdata', (req, res) => {
+app.post('/api/sendPost', (req, res) => {
     console.log(req.body);
     const requests = req.body
-    co(function*(){
-        const client = yield MongoClient.connect(mongoUrl);
-        console.log("Connected correctly to server");
-
-        const db = client.db('data-jour')      
-        const r = yield db.collection('posts').insertOne(req.body);
+    MongoClient.connect(mongoUrl, async(err, client) => {
+        if(err){
+            console.log(err.stack)
+        }
+        const db = client.db('data-jour');
+        const r = await db.collection('posts').insertOne(req.body);
         assert.equal(1, r.insertedCount);
-        client.close()
-    }).catch(function(err) {
-        console.log(err.stack);
-      });
-    // MongoClient.connect(mongoUrl, async(err, client) => {
-    //     const db = client.db('data-jour');
-    //     const r = await db.collection('posts').insertOne(req.body);
-    //     assert.equal(1, r.insertedCount);
-    //     db.close()
-
-    //     if(err){
-    //         console.log(err.stack)
-    //     }
-    // })
+        db.close()
+    })
 });
 
-app.get('/api/test', (req, res) => {
-    res.send('ok?')
-})
+// app.get('/api/getPost', (req, res) => {
+    
+// })
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

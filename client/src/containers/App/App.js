@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import Layouts from '../../hoc/Layouts/layouts';
-import Posts from '../posts/posts'
-import NewPost from '../newPost/newPost'
+import NewPost from '../pages/community/newPost/newPost'
 import classes from './App.css';
 
 class App extends Component {
