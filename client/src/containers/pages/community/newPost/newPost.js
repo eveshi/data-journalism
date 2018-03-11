@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from '../../../../axios_data';
 import marked from 'marked';
-import Input from './input/input';
+import InputPost from '../../../../publicComponents/inputPost/inputPost';
 import classes from './newPost.css';
 
 class NewPost extends Component {
@@ -13,7 +13,7 @@ class NewPost extends Component {
             },
             userProfile: {
                 inputType: null,
-                value: '../../../../assets/profilePic/2.jpg',
+                value: 'second',
             },
             title: {
                 inputType: 'text',
@@ -38,13 +38,11 @@ class NewPost extends Component {
         const date = Date.now()
         postData.date.value = date
         console.log(date)
-        const postWillBeSent = []
+        let postWillBeSent = {}
         for (let key in postData) {
-            let postElement = {
-                id: key,
-                value: postData[key].value
-            }
-            postWillBeSent.push(postElement)
+            let postElement = {}
+            postElement[key] = postData[key].value 
+            postWillBeSent = {...postWillBeSent, ...postElement}
         }
         console.log(postWillBeSent)
         const request = await axios.post('/api/sendPost',{
@@ -79,17 +77,16 @@ class NewPost extends Component {
             <div className={classes.newPost}>
                 <form>
                     {postData.map((el) => {
-                        return (<Input
+                        return (<InputPost
                             key={el.id}
                             name={el.id}
                             inputType={el.inputType}
                             value={el.value}
                             placeholder={el.placeholder}
-                            change={(event) => this.changeHandler(event, el.id)} />)}
+                            change={(event) => this.changeHandler(event, el.id)}
+                            inputContentDisplay={contentHtml} />)}
                     )}
                 </form>
-                <div dangerouslySetInnerHTML={ {__html: contentHtml} } />
-                <p>基于Markdown输入</p>
                 <button onClick={this.submitHandler}>提交</button>
             </div>
         )

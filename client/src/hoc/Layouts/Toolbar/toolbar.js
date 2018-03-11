@@ -19,29 +19,30 @@ class Toolbar extends Component {
         showSidebar: false,
     }
 
-    showMenu = () => {
+    showSidebar = () => {
         this.setState((prevState) => ({
-            show: ! prevState.show
+            showSidebar: ! prevState.showSidebar
         }))
     }
 
-    hideMenu = () => {
+    hideSidebar = () => {
         this.setState((prevState) => ({
-            show: ! prevState.show
+            showSidebar: ! prevState.showSidebar
         }))
     }
 
     render() {return (
         <Aux>
             <div className={classes.toolbar}>
-                <img src={icon} alt='菜单' onClick={this.showMenu} />
+                <img src={icon} alt='菜单' onClick={this.showSidebar} />
                 <p>数据新闻</p>
             </div>
             <div>
                 <Backdrops 
                     show={this.state.showSidebar}
-                    click={this.hideMenu}/>
-                <Sidebar 
+                    click={this.hideSidebar}/>
+                <Sidebar
+                    click={this.hideSidebar}
                     show={this.state.showSidebar}
                     menu={this.state.menu}
                     loginStatus={this.state.loginStatus}

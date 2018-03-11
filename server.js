@@ -33,7 +33,6 @@ app.get('/api/getPost', (req, res) => {
         }
         const db = client.db('data-jour');
         const postQuery = await db.collection('posts').find().skip(0).limit(5).toArray()
-        console.log(postQuery)
         client.close()
 
         res.send(postQuery);

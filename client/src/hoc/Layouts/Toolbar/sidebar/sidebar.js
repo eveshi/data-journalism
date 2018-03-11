@@ -5,7 +5,10 @@ import classes from './sidebar.css';
 
 const sidebar = (props) => {
     return(
-        <div className={classes.sidebar} style={props.show?{}:{display:'none'}}>
+        <div 
+            className={classes.sidebar} 
+            style={props.show?{}:{display:'none'}}
+            onClick={props.click}>
             <p className={classes.title}>数据新闻</p>
             <Menu menuList={props.menu}/>
             <UserLog 
