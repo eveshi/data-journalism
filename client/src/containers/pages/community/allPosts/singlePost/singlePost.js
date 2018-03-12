@@ -23,4 +23,5 @@ const singlePost = (props) => {
     )
 };
 
+
 export default singlePost;

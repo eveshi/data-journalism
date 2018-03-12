@@ -10,8 +10,8 @@ class PostDetails extends Component {
 
     componentWillMount(){
         console.log(this.props.location.search)
-        const params = this.props.location.search
-        const id = new URLSearchParams(params)
+        const paramsGet = this.props.location.search
+        const id = new URLSearchParams(paramsGet).get('id')
         console.log(id)
     }   
 
