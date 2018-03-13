@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import axios from '../../../../axios_data';
+import axios from '../../../axios_data';
 import marked from 'marked';
-import InputPost from '../../../../publicComponents/inputPost/inputPost';
+import InputPost from '../../../components/inputPost/inputPost';
 import classes from './newPost.css';
 
 class NewPost extends Component {

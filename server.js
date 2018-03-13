@@ -1,3 +1,5 @@
+const MongoID = require('mongodb').ObjectId
+
 const express = require('express');
 const cors = require('cors');
 var bodyParser = require('body-parser');
@@ -13,8 +15,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/api/sendPost', (req, res) => {
-    console.log(req.body);
-    const requests = req.body
     MongoClient.connect(mongoUrl, async(err, client) => {
         if(err){
             console.log(err.stack)
@@ -32,10 +32,26 @@ app.get('/api/getPost', (req, res) => {
             console.log(err.stack)
         }
         const db = client.db('data-jour');
-        const postQuery = await db.collection('posts').find().skip(0).limit(5).toArray()
+        const postQuery = await db.collection('posts').find().sort({_id:-1}).skip(0).limit(5).toArray()
         client.close()
 
         res.send(postQuery);
+    })
+})
+
+app.get('/api/postDetails',(req, res) => {
+    const id = req.query.id
+    console.log(id)
+    MongoClient.connect(mongoUrl, async(err,client) => {
+        if(err){
+            console.log(err.stack)
+        }
+        const db = client.db('data-jour')
+        const postDatails = await db.collection('posts').findOne({"_id": new ObjectID(id)})
+        console.log(postDatails)
+        client.close()
+
+        res.send(postDetails)
     })
 })
 

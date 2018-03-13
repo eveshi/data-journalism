@@ -4,7 +4,10 @@
   "scripts": {
     "client": "cd client && npm start",
     "server": "nodemon server.js",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "build": "node client/scripts/build.js",
+    "test": "node client/scripts/test.js —env=jsdom"
+
   },
   "dependencies": {
     "autoprefixer": "^7.1.6",

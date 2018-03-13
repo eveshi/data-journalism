@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import axios from '../../../../axios_data';
+import axios from '../../../axios_data';
 import SinglePost from './singlePost/singlePost';
-import Aux from '../../../../hoc/Aux/aux';
-import classes from './allPosts.css';
+import Aux from '../../../hoc/aux/aux';
+import classes from './community.css';
 
-class allPost extends Component {
+class Community extends Component {
     state = {
         posts: []
     }
@@ -49,8 +49,7 @@ class allPost extends Component {
 
     getPost = async() =>{
         const response = await axios.get('/api/getPost',{})
-        const postsData = response.data
-        return postsData
+        return response.data;
     }
 
     render(){
@@ -73,4 +72,4 @@ class allPost extends Component {
     }
 }
 
-export default allPost;
+export default Community;

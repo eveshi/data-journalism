@@ -1,7 +1,7 @@
 import React,{ Component } from 'react';
 import Sidebar from './sidebar/sidebar';
-import Aux from '../../Aux/aux';
-import Backdrops from '../../../publicComponents/backdrops/backdrops';
+import Aux from '../../aux/aux';
+import Backdrops from '../../../components/backdrops/backdrops';
 import classes from './toolbar.css';
 import icon from '../../../assets/images/menu.png';
 

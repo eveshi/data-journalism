@@ -1,7 +1,7 @@
 import React,{ Component } from 'react';
-import axios from '../../../../../axios_data';
+import axios from '../../../axios_data';
 import SingleContent from './singleContent/singleContent';
-import InputPost from '../../../../../publicComponents/inputPost/inputPost'
+import InputPost from '../../../components/inputPost/inputPost';
 
 class PostDetails extends Component {
     state = {
@@ -12,12 +12,21 @@ class PostDetails extends Component {
         console.log(this.props.location.search)
         const paramsGet = this.props.location.search
         const id = new URLSearchParams(paramsGet).get('id')
-        console.log(id)
+        this.getPost(id).then((el) =>{
+            console.log(el)
+        })
     }   
 
-    getPost = async() => {
-        const response = await axios.get('')
+    getPost = async(id) => {
+        console.log('enter')
+        console.log(id)
+        const response = await axios.get('/api/postDetails',{
+            params:{
+                id: id
+            }
+        })
         console.log(response.data)
+        return response.data
     }
 
     render(){
