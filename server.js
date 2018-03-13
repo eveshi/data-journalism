@@ -1,9 +1,8 @@
-const MongoID = require('mongodb').ObjectId
-
 const express = require('express');
 const cors = require('cors');
 var bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
+const MongoID = require('mongodb').ObjectId;
 const assert = require('assert');
 const co = require('co');
 
@@ -35,24 +34,61 @@ app.get('/api/getPost', (req, res) => {
         const postQuery = await db.collection('posts').find().sort({_id:-1}).skip(0).limit(5).toArray()
         client.close()
 
-        res.send(postQuery);
+        const postQuerySorted = postsSorted(postQuery)
+        res.send(postQuerySorted);
     })
 })
 
 app.get('/api/postDetails',(req, res) => {
     const id = req.query.id
-    console.log(id)
     MongoClient.connect(mongoUrl, async(err,client) => {
         if(err){
             console.log(err.stack)
         }
         const db = client.db('data-jour')
-        const postDatails = await db.collection('posts').findOne({"_id": new ObjectID(id)})
-        console.log(postDatails)
+        const postDetails = await db.collection('posts').findOne({_id: MongoID(id)})
         client.close()
 
-        res.send(postDetails)
+        const postObject = [postDetails]
+        const postContent = postsSorted(postObject)
+
+        res.send(postContent)
     })
 })
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
+
+const postsSorted = (postsUnsorted) => {
+    let postsSorted = []
+    postsUnsorted.map((el,index) => {
+        const mainContent = el['mainContent']
+        const dateUpload = mainContent['date'];
+        const dateNow = Date.now();
+        const datePassed = ((dateNow - dateUpload)/1000).toFixed(0);
+        let datePassedString = '';
+        if (datePassed < 60){
+            datePassedString = datePassed + '秒'
+        }else if(datePassed < 60*60){
+            datePassedString = (datePassed/60).toFixed(0) + '分'
+        }else if(datePassed < 60*60*24){
+            datePassedString = (datePassed/(60*60)).toFixed(0) + '小时'
+        }else if(datePassed < 60*60*24*30){
+            datePassedString = (datePassed/(60*60*24)).toFixed(0) + '天'
+        }else if(datePassed < 60*60*24*365){
+            datePassedString = (datePassed/(60*60*24*30)).toFixed(0) + '月'
+        }else{
+            datePassedString = (datePassed/(60*60*24*365)).toFixed(0) + '年'
+        }
+        const postElement = {
+            key: el['_id'],
+            userProfile: mainContent['userProfile'],
+            userName: mainContent['user'],
+            title: mainContent['title'],
+            content: mainContent['content'],
+            time: datePassedString,
+            commentNumber: 0,
+        }
+        postsSorted.push(postElement)
+    })
+    return postsSorted
+}
