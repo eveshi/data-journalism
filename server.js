@@ -46,13 +46,42 @@ app.get('/api/postDetails',(req, res) => {
             console.log(err.stack)
         }
         const db = client.db('data-jour')
-        const postDetails = await db.collection('posts').findOne({_id: MongoID(id)})
+        const postsDetails = await db.collection('posts').findOne({_id: MongoID(id)}).toArray()
         client.close()
 
-        const postObject = [postDetails]
-        const postContent = postsSorted(postObject)
+        const postObject = []
+        postsDetails.forEach(element => {
+            postObject.push(element)
+        });
+        console.log(postObject)
+        const postContent = postsSorted(postsDetails)
+
+        console.log(postContent)
 
         res.send(postContent)
+    })
+})
+
+app.post('/api/sendComment', (req,res) => {
+    const id = req.body.id
+    const comment = req.body.comment
+    MongoClient.connect(mongoUrl, async(err, client) => {
+        if(err){
+            console.log(err.stack)
+        }
+
+        const db = client.db('data-jour')
+        console.log(id)
+        console.log(req.body)
+        const sendComment = await db.collection('posts').update(
+            {_id: MongoID(id)},
+            {
+                $set:{comment}
+            },
+            {upsert: true}
+        )
+
+        client.close()
     })
 })
 

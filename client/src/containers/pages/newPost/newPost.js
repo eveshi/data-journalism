@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from '../../../axios_data';
+import Button from '../../../components/button/button'
 import marked from 'marked';
 import InputPost from '../../../components/inputPost/inputPost';
 import classes from './newPost.css';
@@ -87,7 +88,7 @@ class NewPost extends Component {
                             inputContentDisplay={contentHtml} />)}
                     )}
                 </form>
-                <button onClick={this.submitHandler}>提交</button>
+                <Button onClick={this.submitHandler} name="提交" />
             </div>
         )
     }

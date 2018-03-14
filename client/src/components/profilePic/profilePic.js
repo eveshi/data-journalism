@@ -8,6 +8,7 @@ import sixth from '../../assets/profilePic/6.jpg';
 import seventh from '../../assets/profilePic/7.jpg';
 import eighth from '../../assets/profilePic/8.jpg';
 import Aux from '../../hoc/aux/aux';
+import classes from './profilePic.css'
 
 const profilePic = (props) => {
     let profileSrc = '';
@@ -43,7 +44,7 @@ const profilePic = (props) => {
 
     return(
         <Aux>
-            <img src={profileSrc} alt='profilePic' />
+            <img src={profileSrc} alt='profilePic' className={classes.profilePic} />
         </Aux>
     )
 }

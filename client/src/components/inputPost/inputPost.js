@@ -1,4 +1,5 @@
 import React from 'react';
+import Aux from '../../hoc/aux/aux'
 import classes from './inputPost.css';
 
 const inputValue = (props) => {
@@ -13,24 +14,28 @@ const inputValue = (props) => {
             break;
         case 'textarea':
             InputContent = (
-                <div>
-                <textarea
-                    className = {classes.inputContent}
-                    placeholder={props.placeholder}
-                    value={props.value}
-                    onChange={props.change}  />
-                <div dangerouslySetInnerHTML={ {__html: props.inputContentDisplay} } />
-                <p>基于Markdown输入</p>
-                </div>);
+                <div className={classes.inputBox}>
+                    <div className={classes.textarea}>
+                        <textarea
+                            className = {classes.inputContent}
+                            placeholder={props.placeholder}
+                            value={props.value}
+                            onChange={props.change}  />
+                        <div dangerouslySetInnerHTML={ {__html: props.inputContentDisplay} }
+                            className={classes.display} />
+                    </div>
+                    <p className={classes.caption}>采用 Markdown 输入</p>
+                </div>
+            );
             break;
         default: 
             break;     
     }
 
     return(
-        <div>
+        <Aux>
             {InputContent}
-        </div>
+        </Aux>
     )
 };
 
