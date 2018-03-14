@@ -9,7 +9,7 @@ const singleContent = (props) => {
             <div className={classes.postBox}>
                 <div className={classes.headline}>
                     <p className={classes.title}>{props.title}</p>
-                    <p className={classes.time}>{props.userName}发布于{props.updateTime}前</p>
+                    <p className={classes.time}>{props.userName}发布于{props.updateTime}</p>
                 </div>
                 <div className={classes.content} 
                     dangerouslySetInnerHTML={ {__html: props.content} } />

@@ -34,7 +34,16 @@ app.get('/api/getPost', (req, res) => {
         const postQuery = await db.collection('posts').find().sort({_id:-1}).skip(0).limit(5).toArray()
         client.close()
 
-        const postQuerySorted = postsSorted(postQuery)
+        postContentArray = []
+        postQuery.map((el) => {
+            const id = el._id
+            const newObject = {
+                id: id, 
+                ...el.mainContent
+            }
+            postContentArray.push(newObject)
+        })
+        const postQuerySorted = postsSorted(postContentArray)
         res.send(postQuerySorted);
     })
 })
@@ -46,17 +55,17 @@ app.get('/api/postDetails',(req, res) => {
             console.log(err.stack)
         }
         const db = client.db('data-jour')
-        const postsDetails = await db.collection('posts').findOne({_id: MongoID(id)}).toArray()
+        const postsDetails = await db.collection('posts').findOne({_id: MongoID(id)})
         client.close()
 
-        const postObject = []
-        postsDetails.forEach(element => {
-            postObject.push(element)
-        });
-        console.log(postObject)
-        const postContent = postsSorted(postsDetails)
-
-        console.log(postContent)
+        objectArray = []
+        Object.keys(postsDetails).forEach((key) => {
+            objectArray.push(postsDetails[key])
+            if(postsDetails[key].comment){
+                objectArray = [...objectArray, ...postsDetails[key].comment]
+            }
+        })
+        const postContent = postsSorted(objectArray,true)
 
         res.send(postContent)
     })
@@ -71,12 +80,10 @@ app.post('/api/sendComment', (req,res) => {
         }
 
         const db = client.db('data-jour')
-        console.log(id)
-        console.log(req.body)
         const sendComment = await db.collection('posts').update(
             {_id: MongoID(id)},
             {
-                $set:{comment}
+                $push:{"mainContent.comment": comment}
             },
             {upsert: true}
         )
@@ -87,37 +94,45 @@ app.post('/api/sendComment', (req,res) => {
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
-const postsSorted = (postsUnsorted) => {
+const postsSorted = (postsUnsorted, forDetailPage) => {
     let postsSorted = []
     postsUnsorted.map((el,index) => {
-        const mainContent = el['mainContent']
-        const dateUpload = mainContent['date'];
-        const dateNow = Date.now();
-        const datePassed = ((dateNow - dateUpload)/1000).toFixed(0);
-        let datePassedString = '';
-        if (datePassed < 60){
-            datePassedString = datePassed + '秒'
-        }else if(datePassed < 60*60){
-            datePassedString = (datePassed/60).toFixed(0) + '分'
-        }else if(datePassed < 60*60*24){
-            datePassedString = (datePassed/(60*60)).toFixed(0) + '小时'
-        }else if(datePassed < 60*60*24*30){
-            datePassedString = (datePassed/(60*60*24)).toFixed(0) + '天'
-        }else if(datePassed < 60*60*24*365){
-            datePassedString = (datePassed/(60*60*24*30)).toFixed(0) + '月'
-        }else{
-            datePassedString = (datePassed/(60*60*24*365)).toFixed(0) + '年'
+        let time = null
+        if(el.user){
+            if(forDetailPage){
+                const timestamp = parseInt(el.time)
+                time = new Date(timestamp).toLocaleDateString() + " " + new Date(timestamp).toLocaleTimeString()
+            }else{
+                const timeUpload = el.time;
+                const timeNow = Date.now();
+                const timePassed = ((timeNow - timeUpload)/1000).toFixed(0);
+                let timePassedString = '';
+                if (timePassed < 60){
+                    timePassedString = timePassed + '秒'
+                }else if(timePassed < 60*60){
+                    timePassedString = (timePassed/60).toFixed(0) + '分'
+                }else if(timePassed < 60*60*24){
+                    timePassedString = (timePassed/(60*60)).toFixed(0) + '小时'
+                }else if(timePassed < 60*60*24*30){
+                    timePassedString = (timePassed/(60*60*24)).toFixed(0) + '天'
+                }else if(timePassed < 60*60*24*365){
+                    timePassedString = (timePassed/(60*60*24*30)).toFixed(0) + '月'
+                }else{
+                    timePassedString = (timePassed/(60*60*24*365)).toFixed(0) + '年'
+                }
+                time = timePassedString
+            }
+            const postElement = {
+                key: el.time+el.title,
+                id: el.id,
+                userProfile: el.userProfile,
+                userName:el.user,
+                title: el.title,
+                content: el.content,
+                time: time,
+            }
+            postsSorted.push(postElement)
         }
-        const postElement = {
-            key: el['_id'],
-            userProfile: mainContent['userProfile'],
-            userName: mainContent['user'],
-            title: mainContent['title'],
-            content: mainContent['content'],
-            time: datePassedString,
-            commentNumber: 0,
-        }
-        postsSorted.push(postElement)
     })
     return postsSorted
 }

@@ -26,9 +26,13 @@ class NewPost extends Component {
                 placeholder: '输入内容……',
                 value: '',
             },
-            date: {
+            time: {
                 inputType: null,
                 value: null,
+            },
+            comment:{
+                inputType: null,
+                value: [],
             }
         },
         update: true,
@@ -36,9 +40,9 @@ class NewPost extends Component {
 
     submitHandler = async() => {
         let postData = this.state.postData
-        const date = Date.now()
-        postData.date.value = date
-        console.log(date)
+        const time = Date.now()
+        postData.time.value = time
+        console.log(time)
         let postWillBeSent = {}
         for (let key in postData) {
             let postElement = {}

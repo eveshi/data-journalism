@@ -11,8 +11,9 @@ class PostDetails extends Component {
         comment: {
             inputType: "textarea",
             placeholder: "评论",
-            value: "",
-        }
+            content: "",
+        },
+        id: null,
     }
 
     componentWillMount(){
@@ -20,7 +21,8 @@ class PostDetails extends Component {
         const id = new URLSearchParams(paramsGet).get('id')
         this.getPost(id).then((post) => {
             this.setState({
-                post: post
+                post: post,
+                id: id
             })
         })
     }   
@@ -36,25 +38,22 @@ class PostDetails extends Component {
 
     conmmentValue = (event) => {
         const comment = this.state.comment
-        comment.value = event.target.value
+        comment.content = event.target.value
         this.setState({
             comment: comment
         })
     }
 
     submitHandler = () => {
-        const post = this.state.post[0]
         const comment = this.state.comment
-        const id = post.key
-        const time = new Date()
-        const key = this.state.post.length
+        const id = this.state.id
+        const time = Date.now()
 
         const commentWillSent = {
-            key: key,
-            userName: post.userName,
-            userProfile: post.userProfile,
+            user: "admin",
+            userProfile: "third",
             time: time,
-            value: comment.value,
+            content: comment.content,
         }
         axios.post('api/sendComment',{
             id: id,
@@ -64,7 +63,7 @@ class PostDetails extends Component {
 
     render(){
         const comment = this.state.comment
-        const commentHtml = marked(comment.value)
+        const commentHtml = marked(comment.content)
 
         return(
             <div>
@@ -82,7 +81,7 @@ class PostDetails extends Component {
                 <InputPost
                     inputType={comment.inputType}
                     placeholder={comment.placeholder}
-                    value={comment.value}
+                    value={comment.content}
                     change={this.conmmentValue}
                     inputContentDisplay={commentHtml} />
                 <Button onClick={this.submitHandler} name="提交" />

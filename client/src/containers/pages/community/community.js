@@ -19,6 +19,7 @@ class Community extends Component {
 
     getPost = async() =>{
         const response = await axios.get('/api/getPost',{})
+        console.log(response.data)
         return response.data;
     }
 
@@ -29,7 +30,7 @@ class Community extends Component {
                     return (
                         <div key={el['key']} className={classes.singlePost}>
                             <SinglePost
-                                id={el['key']}
+                                id={el['id']}
                                 userProfile={el['userProfile']}
                                 userName={el['userName']}
                                 title={el['title']}
