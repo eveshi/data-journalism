@@ -6,9 +6,11 @@ import classes from './App.css';
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
-        <Page />
-      </BrowserRouter>
+      <DocumentTitle title='Data-Journalism'>
+        <BrowserRouter>
+          <Page />
+        </BrowserRouter>
+      </DocumentTitle>
     );
   }
 }
