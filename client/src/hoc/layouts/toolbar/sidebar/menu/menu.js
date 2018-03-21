@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import Aux from '../../../../Aux/aux';
+import Aux from '../../../../aux/aux';
 
 const menu = (props) => props.menuList.map((el) => {
     return (
