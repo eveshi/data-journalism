@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from '../../../axios_data';
 import SinglePost from './singlePost/singlePost';
-import Aux from '../../../hoc/Aux/aux';
+import Aux from '../../../hoc/aux/aux';
 import classes from './community.css';
 
 class Community extends Component {

@@ -7,7 +7,7 @@ import fifth from '../../assets/profilePic/5.jpg';
 import sixth from '../../assets/profilePic/6.jpg';
 import seventh from '../../assets/profilePic/7.jpg';
 import eighth from '../../assets/profilePic/8.jpg';
-import Aux from '../../hoc/Aux/aux';
+import Aux from '../../hoc/aux/aux';
 import classes from './profilePic.css'
 
 const profilePic = (props) => {

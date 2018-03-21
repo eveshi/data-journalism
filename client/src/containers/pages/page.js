@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import Layouts from '../../hoc/Layouts/layouts';
+import Layouts from '../../hoc/layouts/layouts';
 import NewPost from '../pages/newPost/newPost';
 import Community from '../pages/community/community';
 import postDetails from '../pages/postDetails/postDetails';
