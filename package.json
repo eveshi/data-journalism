@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "client": "cd client && npm run start-client",
-    "server": "nodemon server.js",
+    "server": "node server.js",
     "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "build": "node client/scripts/build.js",
     "test": "node client/scripts/test.js —env=jsdom"
