@@ -1,0 +1,25 @@
+.toolbar{
+    position: absolute;
+    height: 48px;
+    width: 100%;
+    background-color: darkslategrey;
+    font-family: FZpixes;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    z-index: 1;
+}
+
+.toolbar p{
+    margin: 8px;
+    font-size: 32px;
+}
+
+.toolbar img{
+    height: 32px;
+    width: 32px;
+    max-height: 100%;
+    max-width: 100%;
+    margin: 8px;
+}
