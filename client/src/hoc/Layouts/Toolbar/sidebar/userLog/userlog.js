@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import Aux from '../../../../aux/aux';
+import Aux from '../../../../Aux/aux';
 
 const userlog = (props) => {
     return (

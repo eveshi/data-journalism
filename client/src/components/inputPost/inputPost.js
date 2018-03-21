@@ -1,5 +1,5 @@
 import React from 'react';
-import Aux from '../../hoc/aux/aux'
+import Aux from '../../hoc/Aux/aux'
 import classes from './inputPost.css';
 
 const inputValue = (props) => {
