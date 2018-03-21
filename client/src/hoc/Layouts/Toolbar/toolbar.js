@@ -1,6 +1,6 @@
 import React,{ Component } from 'react';
 import Sidebar from './sidebar/sidebar';
-import Aux from '../../aux/aux';
+import Aux from '../../Aux/aux';
 import Backdrops from '../../../components/backdrops/backdrops';
 import classes from './toolbar.css';
 import icon from '../../../assets/images/menu.png';
