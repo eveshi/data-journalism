@@ -1,5 +1,5 @@
 import React from 'react';
-import Toolbar from './Toolbar/toolbar';
+import Toolbar from './toolbar/toolbar';
 import classes from './layouts.css';
 
 const layouts = (props) => {
