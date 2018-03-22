@@ -7,6 +7,7 @@ const assert = require('assert');
 const co = require('co');
 
 const app = express();
+console.log('PORT:', process.env.PORT);
 const port = process.env.PORT || 5000;
 const mongoUrl = 'mongodb://localhost:27017/data-jour';
 
