@@ -9,7 +9,6 @@ class Toolbar extends Component {
     state = {
         menu: [
             { id:'home', name:'主页', link:'/home' },
-            { id:'news', name:'数据新闻', link:'/news' },
             { id:'lesson', name:'教学', link:'/lesson' },
             { id:'community', name:'社区', link:'/community' },            
             { id:'about', name:'关于', link:'/about' },

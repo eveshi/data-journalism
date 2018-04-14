@@ -1,3 +1,8 @@
+a{
+    text-decoration: none;
+    color: black;
+}
+
 .singlePost{
     margin: 5px auto;
     height: 100px;
@@ -61,4 +66,8 @@
     height: 25px;
     width: 25px;
     margin: auto;
+}
+
+.singlePost:hover{
+    background-color: lightgrey
 }
