@@ -1,6 +1,7 @@
 import React from 'react';
-import Aux from '../../hoc/aux/aux'
+import Aux from '../../hoc/aux/aux';
 import classes from './inputPost.css';
+import Button from '../button/button';
 
 const inputValue = (props) => {
     const type = props.inputType;
@@ -10,7 +11,8 @@ const inputValue = (props) => {
             InputContent = <input
                 placeholder={props.placeholder}
                 value={props.value}
-                onChange={props.change} />;
+                onChange={props.change}
+                style={props.hide?{display:'none'}:{}} />;
             break;
         case 'textarea':
             InputContent = (
@@ -26,6 +28,11 @@ const inputValue = (props) => {
                     </div>
                     <p className={classes.caption}>采用 Markdown 输入</p>
                 </div>
+            );
+            break;
+        case 'button':
+            InputContent = (
+                <Button onClick={props.onClick} name={props.value}/>
             );
             break;
         default: 

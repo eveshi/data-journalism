@@ -26,6 +26,18 @@ app.post('/api/sendPost', (req, res) => {
     })
 });
 
+app.post('/api/sendLesson',(req,res) => {
+    MongoClient.connect(mongoUrl, async(err,client) => {
+        if(err){
+            console.log(err.stack)
+        }
+        const db = client.db('data-jour');
+        const addLesson = await db.collection('lessons').insertOne(req.body);
+        assert.equal(1,addLesson.insertedCount)
+        client.close()
+    })
+});
+
 app.get('/api/getPost', (req, res) => {
     MongoClient.connect(mongoUrl, async(err, client) => {
         if(err){
