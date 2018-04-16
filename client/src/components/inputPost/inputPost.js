@@ -30,11 +30,6 @@ const inputValue = (props) => {
                 </div>
             );
             break;
-        case 'button':
-            InputContent = (
-                <Button onClick={props.onClick} name={props.value}/>
-            );
-            break;
         default: 
             break;     
     }
