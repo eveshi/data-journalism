@@ -4,6 +4,14 @@ import Page from '../pages/page'
 import classes from './App.css';
 
 class App extends Component {
+  componentWillMount(){
+    console.log('app will mount')
+  }
+
+  componentWillUpdate(){
+    console.log('app will update')
+  }
+
   render() {
     return (
       <BrowserRouter>
