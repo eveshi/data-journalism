@@ -4,14 +4,14 @@ import classes from './singleLesson.css';
 
 const singleLesson = (props) => {
     return(
-        <div className={classes.title}>
+        <div className={classes.singleLesson}>
             <div className={classes.titlePic}>
-                <img src={props.titlePic} alt='title'/>
-                <img src={play} alt='play' />
+                <img id='titlePic' src={props.titlePic} alt='title'/>
+                <p>内含视频</p>
             </div>
             <div className={classes.titleContent}>
-                <p>{props.title}</p>
-                <p>发布于{props.uploadTime}前</p>
+                <p className={classes.title}>{props.title}</p>
+                <p className={classes.time}>发布于{props.uploadTime}前</p>
             </div>
         </div>
     )

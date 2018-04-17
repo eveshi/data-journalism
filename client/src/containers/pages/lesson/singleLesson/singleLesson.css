@@ -1,20 +1,61 @@
-.title{
+.singleLesson{
+    margin: 10px auto;
     width: 90%;
     height: 300px;
     display: flex;
     flex-direction: column;
+    border: solid 1px;
+    border-radius: 20px;
 }
 
 .titlePic{
+    height: 300px;
+    overflow: hidden;
+    position: relative;
+    background-color: #000;
+    border-radius: 20px 20px 0 0;
+}
 
+.titlePic :hover{
+    transition: opacity .5s;
+    opacity: 0.5;
+}
+
+.titlePic img{
+    position: absolute;
+    left: 0;
+    z-index: 200;
+}
+
+.titlePic p{
+    position: absolute;
+    top: 68px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    z-index: 50;
+    font-size: 32px;
 }
 
 .titleContent{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    height: 100px;
+}
 
+.title{
+    font-size: 24px;
+    margin: 5px auto;
+}
+
+.time{
+    font-size: 12px;
+    margin: 5px auto;
 }
 
 @media (min-width: 500px){
-    .title{
+    .singleLesson{
         width:400px;
     }
 }
