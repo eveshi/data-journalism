@@ -162,15 +162,21 @@ const postsSorted = (postsUnsorted, forDetailPage) => {
                 time = timePassedString
             }
 
-            let postElement = {
-                key: el.time+el.title
-            }
+            let postElement = {}
 
             for(let key in el){
                 let elementOfEl = {}
                 elementOfEl[key] = el[key]
                 postElement = {...postElement, ...elementOfEl}
             }
+
+            postElement = {
+                ...postElement,
+                key: el.id,
+                id: el.id,
+                time: time,
+            }
+
             postsSorted.push(postElement)
         }
     })

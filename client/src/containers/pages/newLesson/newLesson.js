@@ -3,6 +3,7 @@ import axios from '../../../axios_data';
 import marked from 'marked';
 import InputLesson from '../../../components/inputPost/inputPost';
 import Button from '../../../components/button/button';
+import classes from './newLesson.css';
 
 class NewLesson extends Component{
     state = {
@@ -148,30 +149,34 @@ class NewLesson extends Component{
         let contentDisplay = marked(content.value)
 
         return(
-            <div>
-                <InputLesson 
+            <div className={classes.newLesson}>
+                <InputLesson className={classes.title}
                     inputType={this.state.title.inputType}
                     placeholder={this.state.title.placeholder}
                     value={this.state.title.value}
                     change={(event) => this.changeHandler(event,this.state.title.name)} />
-                <InputLesson
-                    inputType={this.state.titlePic.inputType}
-                    placeholder={this.state.titlePic.placeholder}
-                    value={this.state.titlePic.value}
-                    hide={this.state.titlePic.hide}
-                    change={(event) => this.changeHandler(event,this.state.titlePic.name)} />
-                <Button 
-                    onClick={() => this.addMedia(this.state.titlePic.name)} 
-                    name={this.state.titlePic.hide?"添加题图":"删除题图"} />
-                <InputLesson
-                    inputType={this.state.titleVideo.inputType}
-                    placeholder={this.state.titleVideo.placeholder}
-                    value={this.state.titleVideo.value}
-                    hide={this.state.titleVideo.hide}
-                    change={(event) => this.changeHandler(event,this.state.titleVideo.name)} />
-                <Button 
-                    onClick={() => this.addMedia(this.state.titleVideo.name)} 
-                    name={this.state.titleVideo.hide?"添加视频":"删除视频"} />
+                <div className={classes.addMedia}>
+                    <InputLesson
+                        inputType={this.state.titlePic.inputType}
+                        placeholder={this.state.titlePic.placeholder}
+                        value={this.state.titlePic.value}
+                        hide={this.state.titlePic.hide}
+                        change={(event) => this.changeHandler(event,this.state.titlePic.name)} />
+                    <Button 
+                        onClick={() => this.addMedia(this.state.titlePic.name)} 
+                        name={this.state.titlePic.hide?"添加题图":"删除题图"} />
+                </div>
+                <div className={classes.addMedia}>
+                    <InputLesson
+                        inputType={this.state.titleVideo.inputType}
+                        placeholder={this.state.titleVideo.placeholder}
+                        value={this.state.titleVideo.value}
+                        hide={this.state.titleVideo.hide}
+                        change={(event) => this.changeHandler(event,this.state.titleVideo.name)} />
+                    <Button 
+                        onClick={() => this.addMedia(this.state.titleVideo.name)} 
+                        name={this.state.titleVideo.hide?"添加视频":"删除视频"} />
+                </div>
                 <InputLesson 
                     inputType={this.state.content.inputType}
                     placeholder={this.state.content.placeholder}

@@ -11,8 +11,11 @@ class Lesson extends Component {
 
     componentWillMount(){
         console.log('will mount')
-        this.getLesson().then((data) => {
-            console.log(data)
+        this.getLesson().then((lessons) => {
+            console.log(lessons)
+            this.setState({
+                lessons: lessons
+            })
         })
     }
 
@@ -24,13 +27,17 @@ class Lesson extends Component {
     }
 
     render(){
-        return(this.state.lessons.map((lesson) => {
-            return(
-                <div>
-                    <SingleLesson />
-                </div>
-            )
-        })
+        return(
+            <div>
+                {this.state.lessons.map((lesson) => {
+                    return(
+                        <SingleLesson 
+                            key={lesson.key}
+                            title={lesson.title}
+                            titlePic={lesson.titlePic}
+                            uploadTime={lesson.time}/>)
+                })}
+            </div>
         )
     }
 }

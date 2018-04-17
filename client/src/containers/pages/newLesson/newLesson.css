@@ -1,0 +1,18 @@
+.newLesson{
+    display: flex;
+    flex-direction: column;
+}
+
+button{
+    width:auto;
+    margin: 5px auto;
+}
+
+.addMedia{
+    display: flex;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 80%;
+    margin-left: 10%;
+}
