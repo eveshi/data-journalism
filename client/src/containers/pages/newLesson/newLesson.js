@@ -33,12 +33,13 @@ class NewLesson extends Component{
             name:'content',
         },
         comment:{
-            inputType: null,
             value: [],
         },
         time:{
-            inputType: null,
             value: null,
+        },
+        user:{
+            value: 'admin',
         }
     }
 
@@ -113,7 +114,8 @@ class NewLesson extends Component{
                     this.setState((prevState) => ({
                         titlePic:{
                             ...prevState.titlePic, 
-                            hide: true
+                            hide: true,
+                            value: '',
                         },
                     }))
                 };
@@ -123,14 +125,15 @@ class NewLesson extends Component{
                     this.setState((prevState) => ({
                         titleVideo:{
                             ...prevState.titleVideo, 
-                            hide: ! prevState.titleVideo.hide
+                            hide: ! prevState.titleVideo.hide,
                         },
                     }))
                 }else if(this.state.titleVideo.hide === false){
                     this.setState((prevState) => ({
                         titleVideo:{
                             ...prevState.titleVideo, 
-                            hide: ! prevState.titleVideo.hide
+                            hide: ! prevState.titleVideo.hide,
+                            value: '',
                         },
                     }))
                 };

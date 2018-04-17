@@ -55,7 +55,7 @@ class PostDetails extends Component {
             time: time,
             content: comment.content,
         }
-        axios.post('api/sendComment',{
+        axios.post('api/sendPostComment',{
             id: id,
             comment: commentWillSent,
         })

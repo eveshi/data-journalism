@@ -84,7 +84,7 @@ app.get('/api/postDetails',(req, res) => {
     })
 })
 
-app.post('/api/sendComment', (req,res) => {
+app.post('/api/sendPostComment', (req,res) => {
     const id = req.body.id
     const comment = req.body.comment
     MongoClient.connect(mongoUrl, async(err, client) => {
@@ -102,6 +102,32 @@ app.post('/api/sendComment', (req,res) => {
         )
 
         client.close()
+    })
+})
+
+app.get('/api/getLesson',(req,res) => {
+    MongoClient.connect(mongoUrl, async(err,client) => {
+        if(err){
+            console.log(res.stack)
+        }
+        
+        const db = client.db('data-jour')
+        const lessonQuery = await db.collection('lessons').find().sort({_id:-1}).skip(0).limit(5).toArray()
+        client.close()
+
+        let lessonsUnsorted = []
+        lessonQuery.map((el) => {
+            let lesson = el.lesson
+            let id = el._id
+            lesson = {
+                id: id,
+                ...lesson
+            }
+            lessonsUnsorted.push(lesson)
+        })
+        const lessonsQuerySorted = postsSorted(lessonsUnsorted)
+
+        res.send(lessonsQuerySorted)
     })
 })
 
@@ -135,14 +161,15 @@ const postsSorted = (postsUnsorted, forDetailPage) => {
                 }
                 time = timePassedString
             }
-            const postElement = {
-                key: el.time+el.title,
-                id: el.id,
-                userProfile: el.userProfile,
-                userName:el.user,
-                title: el.title,
-                content: el.content,
-                time: time,
+
+            let postElement = {
+                key: el.time+el.title
+            }
+
+            for(let key in el){
+                let elementOfEl = {}
+                elementOfEl[key] = el[key]
+                postElement = {...postElement, ...elementOfEl}
             }
             postsSorted.push(postElement)
         }
