@@ -5,7 +5,8 @@ import NewPost from '../pages/newPost/newPost';
 import Community from '../pages/community/community';
 import PostDetails from '../pages/postDetails/postDetails';
 import Lesson from '../pages/lesson/lesson';
-import NewLesson from '../pages/newLesson/newLesson';
+import NewLesson from './newLesson/newLesson';
+import LessonDetails from './lessonDetails/lessonDetails';
 
 const page = () => {
     return (
@@ -13,8 +14,9 @@ const page = () => {
             <Route path="/community/newpost" exact component={NewPost} />
             <Route path="/community" exact component={Community} />
             <Route path="/community/post"  component={PostDetails} />
-            <Route path='/lesson' exact component={Lesson} />
-            <Route path='/lesson/newlesson' exact component={NewLesson} />
+            <Route path="/lessons" exact component={Lesson} />
+            <Route path="/lessons/newlesson" exact component={NewLesson} />
+            <Route path="/lessons/lesson" component={LessonDetails} />
         </Layouts>
     )
 }

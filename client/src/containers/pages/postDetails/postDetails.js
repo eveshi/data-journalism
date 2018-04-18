@@ -2,7 +2,7 @@ import React,{ Component } from 'react';
 import marked from 'marked';
 import axios from '../../../axios_data';
 import Button from "../../../components/button/button"
-import SingleContent from './singleContent/singleContent';
+import SingleContent from '../../../components/singleContent/singleContent';
 import InputPost from '../../../components/inputPost/inputPost';
 
 class PostDetails extends Component {

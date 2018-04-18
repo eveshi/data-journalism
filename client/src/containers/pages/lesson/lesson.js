@@ -9,9 +9,7 @@ class Lesson extends Component {
     }
 
     componentWillMount(){
-        console.log('will mount')
         this.getLesson().then((lessons) => {
-            console.log(lessons)
             this.setState({
                 lessons: lessons
             })
@@ -19,7 +17,6 @@ class Lesson extends Component {
     }
 
     getLesson = async() => {
-        console.log('get lesson')
         const response = await axios.get('/api/getLesson',{})
         const data = response.data
         return data
@@ -32,6 +29,7 @@ class Lesson extends Component {
                     return(
                         <SingleLesson 
                             key={lesson.key}
+                            address={lesson.id}
                             title={lesson.title}
                             titlePic={lesson.titlePic}
                             uploadTime={lesson.time}/>)

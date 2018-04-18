@@ -41,7 +41,10 @@ class NewLesson extends Component{
         },
         user:{
             value: 'admin',
-        }
+        },
+        userProfile: {
+            value: 'second',
+        },
     }
 
     submitHandler = async() => {

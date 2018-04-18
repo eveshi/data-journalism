@@ -1,5 +1,5 @@
 import React from 'react';
-import ProfilePic from '../../../../components/profilePic/profilePic';
+import ProfilePic from '../profilePic/profilePic';
 import classes from './singleContent.css';
 
 const singleContent = (props) => {

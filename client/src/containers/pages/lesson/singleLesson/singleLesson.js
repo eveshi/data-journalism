@@ -1,10 +1,10 @@
 import React from 'react';
-import play from '../../../../assets/images/play.svg';
+import { Link } from 'react-router-dom';
 import classes from './singleLesson.css';
 
 const singleLesson = (props) => {
     return(
-        <div className={classes.singleLesson}>
+        <Link to={'/lessons/lesson?id='+props.address} className={classes.singleLesson}>
             <div className={classes.titlePic}>
                 <img id='titlePic' src={props.titlePic} alt='title'/>
                 <p>内含视频</p>
@@ -13,7 +13,7 @@ const singleLesson = (props) => {
                 <p className={classes.title}>{props.title}</p>
                 <p className={classes.time}>发布于{props.uploadTime}前</p>
             </div>
-        </div>
+        </Link>
     )
 };
 

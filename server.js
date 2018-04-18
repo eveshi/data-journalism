@@ -131,6 +131,26 @@ app.get('/api/getLesson',(req,res) => {
     })
 })
 
+app.get('/api/getLessonDetails',(req,res) => {
+    const id = req.query.id
+
+    MongoClient.connect(mongoUrl, async(err,client) => {
+        if(err){
+            console.log(err.stack)
+        }
+
+        const db = client.db('data-jour')
+        const lessonDetails = await db.collection('lesson').find({_id:MongoID(id)})
+        client.close()
+
+        let lessonDetailsToArray = []
+        object.keys(lessonDetails).forEach((key) => {
+            console.log(lessonDetails[key])
+        })
+
+    })
+})
+
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 const postsSorted = (postsUnsorted, forDetailPage) => {
