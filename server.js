@@ -146,6 +146,7 @@ app.get('/api/getLessonDetails',(req,res) => {
         Object.keys(lessonDetails).forEach((key) => {
             lessonDetailsToArray.push(lessonDetails[key])
             if(lessonDetails.comment){
+                console.log(lessonDetails.comment)
                 lessonDetailsToArray = [...lessonDetailsToArray, ...lessonDetails.comment]
             }
         })

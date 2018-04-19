@@ -3,6 +3,7 @@ import axios from '../../../axios_data';
 import SingleContent from '../../../components/singleContent/singleContent';
 import InputComment from '../../../components/inputPost/inputPost';
 import Button from '../../../components/button/button';
+import YoutubePlayer from '../../../components/youtubePlayer/youtubePlayer'
 import marked from 'marked';
 
 class LessonDetails extends Component {
@@ -14,6 +15,7 @@ class LessonDetails extends Component {
             content: '',
         },
         id: null,
+        videoUrl: null,
     }
 
     componentWillMount(){
@@ -21,9 +23,14 @@ class LessonDetails extends Component {
         const id = new URLSearchParams(paramsGet).get('id')
         this.getDetails(id).then((content)=>{
             console.log(content)
+            let videoUrl = null
+            if(content[0].titleVideo !== ''){
+                videoUrl = content[0].titleVideo
+            }
             this.setState({
                 content: content,
-                id: id
+                id: id,
+                videoUrl: videoUrl
             })
         })
     }
@@ -68,11 +75,10 @@ class LessonDetails extends Component {
 
     render(){
         const comment = this.state.comment
-        console.log(comment)
         const commentDisplay = marked(comment.content)
-
         return(
             <div>
+                {this.state.videoUrl?<YoutubePlayer videoUrl={this.state.videoUrl}/>:null}
                 {this.state.content.map((content) => {
                     return(
                         <SingleContent
