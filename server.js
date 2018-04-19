@@ -140,14 +140,39 @@ app.get('/api/getLessonDetails',(req,res) => {
         }
 
         const db = client.db('data-jour')
-        const lessonDetails = await db.collection('lesson').find({_id:MongoID(id)})
+        const lessonDetails = await db.collection('lessons').findOne({_id:MongoID(id)})
         client.close()
-
         let lessonDetailsToArray = []
-        object.keys(lessonDetails).forEach((key) => {
-            console.log(lessonDetails[key])
+        Object.keys(lessonDetails).forEach((key) => {
+            lessonDetailsToArray.push(lessonDetails[key])
+            if(lessonDetails.comment){
+                lessonDetailsToArray = [...lessonDetailsToArray, ...lessonDetails.comment]
+            }
         })
 
+        const lessonRecieved = postsSorted(lessonDetailsToArray,true)
+
+        res.send(lessonRecieved)
+    })
+})
+
+app.post('/api/sendLessonComment', (req,res) => {
+    const id = req.body.id
+    const comment = req.body.comment
+    MongoClient.connect(mongoUrl, (err,client) => {
+        if(err){
+            console.log(err.stack)
+        }
+
+        const db = client.db('data-jour')
+        const sendLessonComment = db.collection('lessons').update(
+            {_id:MongoID(id)},
+            {
+                $push: {'lesson.comment':comment}
+            },
+            {upsert: true}
+        )
+        client.close()
     })
 })
 
@@ -192,7 +217,7 @@ const postsSorted = (postsUnsorted, forDetailPage) => {
 
             postElement = {
                 ...postElement,
-                key: el.id,
+                key: el.title+el.time+el.user,
                 id: el.id,
                 time: time,
             }

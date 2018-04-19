@@ -1,18 +1,29 @@
 import React,{ Component } from 'react';
 import axios from '../../../axios_data';
 import SingleContent from '../../../components/singleContent/singleContent';
+import InputComment from '../../../components/inputPost/inputPost';
+import Button from '../../../components/button/button';
+import marked from 'marked';
 
 class LessonDetails extends Component {
     state = {
-        content: []
+        content: [],
+        comment: {
+            inputType: 'textarea',
+            placeholder: '想要输入什么评论呢……',
+            content: '',
+        },
+        id: null,
     }
 
     componentWillMount(){
         const paramsGet = this.props.location.search
         const id = new URLSearchParams(paramsGet).get('id')
         this.getDetails(id).then((content)=>{
+            console.log(content)
             this.setState({
-                content: content
+                content: content,
+                id: id
             })
         })
     }
@@ -23,19 +34,63 @@ class LessonDetails extends Component {
                 id: id
             }
         })
-        const content = response.value
+        const content = response.data
         return content
     }
 
+    commentChangeHandler = (event) => {
+        const content = event.target.value
+        this.setState({
+            comment:{
+                ...this.state.comment,
+                content: content
+            }
+        })
+    }
+
+    submitHandler = async() => {
+        const time = Date.now()
+        const comment = {
+            user: 'akb48',
+            userProfile: 'first',
+            content: this.state.comment.content,
+            time: time
+        }
+        const request = await this.sendComment(comment, this.state.id)
+    }
+
+    sendComment = async(comment, id) => {
+        const request = await axios.post('/api/sendLessonComment', {
+            comment:comment,
+            id: id
+        })
+    }
+
     render(){
+        const comment = this.state.comment
+        console.log(comment)
+        const commentDisplay = marked(comment.content)
+
         return(
             <div>
-                <p>test</p>
-                {this.state.content.map((comment) => {
+                {this.state.content.map((content) => {
                     return(
-                        <SingleContent />
+                        <SingleContent
+                            key={content.key}
+                            userProfile={content.userProfile}
+                            userName={content.user}
+                            title={content.title}
+                            updateTime={content.time}
+                            content={content.content} />
                     )
                 })}
+                <InputComment 
+                    inputType={this.state.comment.inputType}
+                    placeholder={this.state.comment.placeholder}
+                    value={this.state.comment.value}
+                    change={(event) => this.commentChangeHandler(event)}
+                    inputContentDisplay={commentDisplay} />
+                <Button onClick={this.submitHandler} name='提交' />
             </div>
         )
     }
