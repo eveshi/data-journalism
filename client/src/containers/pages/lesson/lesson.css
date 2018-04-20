@@ -1,5 +1,35 @@
-.lesson{
+.lessons{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+}
+
+.lessonsPage button{
+    background-color: #ffffff;
+    width: 200px;
+    height: 40px;
+    color: rgb(71, 70, 70);
+    border-radius: 20px;
+    -webkit-box-shadow: 2px 2px 1px grey;
+    box-shadow: 2px 2px 1px grey;
+    margin: 20px auto;
+}
+
+.lessonsPage button :hover{
+    background-color: rgb(228, 228, 228);
+}
+
+.noMoreBox{
+    margin: 20px auto;
+    border: 1px solid #effbff;
+    height: 40px;
+    width: 200px;
+    font-size: 14px;
+    color: #585454;
+    border-radius: 20px;
+    background-color: #def4fb;
+}
+
+.noMoreBox p{
+    margin: 10px;
 }

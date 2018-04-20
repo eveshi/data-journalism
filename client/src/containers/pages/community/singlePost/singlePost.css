@@ -59,13 +59,18 @@ a{
     -ms-flex-direction: column;
     flex-direction: column;
     -ms-flex-pack: distribute;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 .comment img{
     height: 25px;
     width: 25px;
-    margin: auto;
+    margin: 25px auto 5px auto;
+}
+
+.comment p{
+    font-size: 14px;
+    margin: 0px auto 27px auto;
 }
 
 .singlePost:hover{

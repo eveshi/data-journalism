@@ -3,8 +3,8 @@
     flex-direction: column;
 }
 
-button{
-    width:auto;
+.addMedia button{
+    width: auto;
     margin: 5px auto;
 }
 

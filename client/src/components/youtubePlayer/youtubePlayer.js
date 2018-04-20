@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import classes from './youtubePlayer.css'
 
 class Player extends Component {
-    state={
-
-    }
 
     componentWillMount(){
         var tag = document.createElement('script');
