@@ -3,6 +3,7 @@ import axios from '../../../axios_data';
 import Button from '../../../components/button/button'
 import marked from 'marked';
 import InputPost from '../../../components/inputPost/inputPost';
+import SaveSuccessfully from '../../../components/saveSuccessfully/saveSuccessfully';
 import classes from './newPost.css';
 
 class NewPost extends Component {
@@ -36,6 +37,7 @@ class NewPost extends Component {
             }
         },
         update: true,
+        submitted: false,
     }
 
     submitHandler = async() => {
@@ -53,7 +55,17 @@ class NewPost extends Component {
         const request = await axios.post('/api/sendPost',{
             mainContent: postWillBeSent
         })
+        this.setState({
+            submitted: true
+        })
+    }
 
+    submitted = () => {
+        if(this.state.submitted === true){
+            return(
+                <SaveSuccessfully />
+            )
+        }
     }
 
     changeHandler = (event, key) => {
@@ -93,6 +105,7 @@ class NewPost extends Component {
                     )}
                 </form>
                 <Button onClick={this.submitHandler} name="提交" />
+                {this.submmited}
             </div>
         )
     }

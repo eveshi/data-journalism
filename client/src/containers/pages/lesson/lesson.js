@@ -32,7 +32,8 @@ class Lesson extends Component {
                             address={lesson.id}
                             title={lesson.title}
                             titlePic={lesson.titlePic}
-                            uploadTime={lesson.time}/>)
+                            uploadTime={lesson.time}
+                            containVideo={lesson.titleVideo !== '' && lesson.titleVideo?true:false}/>)
                 })}
             </div>
         )

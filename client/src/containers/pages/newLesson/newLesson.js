@@ -16,7 +16,7 @@ class NewLesson extends Component{
         titlePic:{
             inputType:'text',
             placeholder: '输入题图地址……',
-            value: '',
+            value: 'http://blog.finjs.io/wp-content/uploads/2017/02/474570722.jpg',
             hide: true,
             name:'titlePic',
         },

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classes from './youtubePlayer.css'
 
 class Player extends Component {
     state={
@@ -20,8 +21,11 @@ class Player extends Component {
 
     render(){
         return(
-            <iframe id="player" type="text/html" width="640" height="360" 
-            src={this.props.videoUrl+"?enablejsapi=1&origin=http://localhost:3000/"} frameBorder="0"></iframe>
+            <div className={classes.container16x9}>
+            <iframe id="player" type="text/html" className={classes.player} 
+            src={this.props.videoUrl+"?enablejsapi=1&origin=http://localhost:3000/"} 
+            frameBorder="0" allowFullScreen></iframe>
+            </div>
         )
     }
 }

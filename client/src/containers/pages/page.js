@@ -7,6 +7,7 @@ import PostDetails from '../pages/postDetails/postDetails';
 import Lesson from '../pages/lesson/lesson';
 import NewLesson from './newLesson/newLesson';
 import LessonDetails from './lessonDetails/lessonDetails';
+import SaveSuccessfully from '../../components/saveSuccessfully/saveSuccessfully';
 
 const page = () => {
     return (
@@ -17,6 +18,7 @@ const page = () => {
             <Route path="/lessons" exact component={Lesson} />
             <Route path="/lessons/newlesson" exact component={NewLesson} />
             <Route path="/lessons/lesson" component={LessonDetails} />
+            <Route path="/save" exact component={SaveSuccessfully} />
         </Layouts>
     )
 }

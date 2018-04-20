@@ -145,9 +145,8 @@ app.get('/api/getLessonDetails',(req,res) => {
         let lessonDetailsToArray = []
         Object.keys(lessonDetails).forEach((key) => {
             lessonDetailsToArray.push(lessonDetails[key])
-            if(lessonDetails.comment){
-                console.log(lessonDetails.comment)
-                lessonDetailsToArray = [...lessonDetailsToArray, ...lessonDetails.comment]
+            if(lessonDetails[key].comment){
+                lessonDetailsToArray = [...lessonDetailsToArray, ...lessonDetails[key].comment]
             }
         })
 

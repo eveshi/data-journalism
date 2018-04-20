@@ -1,0 +1,11 @@
+.titlePic{
+    width: 640px;
+    height: 360px;
+}
+
+@media(max-width: 711px){
+    .titlePic{
+        width: 90%;
+        height: auto;
+    }
+}

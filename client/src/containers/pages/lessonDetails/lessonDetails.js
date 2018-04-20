@@ -5,6 +5,7 @@ import InputComment from '../../../components/inputPost/inputPost';
 import Button from '../../../components/button/button';
 import YoutubePlayer from '../../../components/youtubePlayer/youtubePlayer'
 import marked from 'marked';
+import classes from './lessonDetails.css';
 
 class LessonDetails extends Component {
     state = {
@@ -16,6 +17,7 @@ class LessonDetails extends Component {
         },
         id: null,
         videoUrl: null,
+        picUrl: null,
     }
 
     componentWillMount(){
@@ -30,7 +32,8 @@ class LessonDetails extends Component {
             this.setState({
                 content: content,
                 id: id,
-                videoUrl: videoUrl
+                videoUrl: videoUrl,
+                picUrl: content[0].titlePic
             })
         })
     }
@@ -78,7 +81,12 @@ class LessonDetails extends Component {
         const commentDisplay = marked(comment.content)
         return(
             <div>
-                {this.state.videoUrl?<YoutubePlayer videoUrl={this.state.videoUrl}/>:null}
+                {this.state.videoUrl?
+                    <YoutubePlayer videoUrl={this.state.videoUrl}/>:
+                    this.state.picUrl?
+                        <img className={classes.titlePic}
+                            src={this.state.picUrl} 
+                            alt='title'/>:null}
                 {this.state.content.map((content) => {
                     return(
                         <SingleContent

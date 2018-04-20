@@ -1,0 +1,22 @@
+.player{
+    width: 640px;
+    height: 360px;
+}
+
+@media(max-width:711px){
+    .container16x9{
+        position: relative;
+        left: 5%;
+        width: 90%;
+        padding-bottom: 50.625%;
+    }
+    
+    .player{
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+    }
+    
+}
