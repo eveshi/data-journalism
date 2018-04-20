@@ -46,3 +46,11 @@ input{
     margin-top: 0px;
 }
 
+.wordsCount{
+    font-size: 8px;
+    position: absolute;
+    bottom: 30px;
+    right: 8%;
+    z-index: 50;
+}
+

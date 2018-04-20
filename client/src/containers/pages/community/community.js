@@ -6,7 +6,8 @@ import classes from './community.css';
 
 class Community extends Component {
     state = {
-        posts: []
+        posts: [],
+        commentNumber: 0
     }
 
     componentWillMount(){
@@ -34,7 +35,8 @@ class Community extends Component {
                                 userProfile={el['userProfile']}
                                 userName={el['userName']}
                                 title={el['title']}
-                                updateTime={el['time']} /> 
+                                updateTime={el['time']}
+                                commentNumber={el['comment'].length} /> 
                         </div>
                     )
                 })}

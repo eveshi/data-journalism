@@ -38,6 +38,7 @@ class NewPost extends Component {
         },
         update: true,
         submitted: false,
+        wordsCount: null,
     }
 
     submitHandler = async() => {
@@ -51,21 +52,12 @@ class NewPost extends Component {
             postElement[key] = postData[key].value 
             postWillBeSent = {...postWillBeSent, ...postElement}
         }
-        console.log(postWillBeSent)
-        const request = await axios.post('/api/sendPost',{
-            mainContent: postWillBeSent
-        })
         this.setState({
             submitted: true
         })
-    }
-
-    submitted = () => {
-        if(this.state.submitted === true){
-            return(
-                <SaveSuccessfully />
-            )
-        }
+        const request = await axios.post('/api/sendPost',{
+            mainContent: postWillBeSent
+        })
     }
 
     changeHandler = (event, key) => {
@@ -76,6 +68,12 @@ class NewPost extends Component {
         this.setState({
             postData: postData
         })
+        if(key === 'content'){
+            const wordsCount = postData.content.value.length
+            this.setState({
+                wordsCount: wordsCount
+            })
+        }
     }
 
     render(){
@@ -101,11 +99,13 @@ class NewPost extends Component {
                             value={el.value}
                             placeholder={el.placeholder}
                             change={(event) => this.changeHandler(event, el.id)}
-                            inputContentDisplay={contentHtml} />)}
+                            inputContentDisplay={contentHtml}
+                            wordsCount={this.state.wordsCount} />)}
                     )}
                 </form>
                 <Button onClick={this.submitHandler} name="提交" />
-                {this.submmited}
+                {this.state.submitted === true?
+                    <SaveSuccessfully goBackTo='/community' /> : null}
             </div>
         )
     }

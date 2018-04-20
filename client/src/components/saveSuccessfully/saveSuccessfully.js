@@ -2,37 +2,36 @@
 import React, { Component } from 'react';
 import Backdrops from '../backdrops/backdrops';
 import Link from '../link/link';
-import { setInterval } from 'timers';
+import { setInterval, setTimeout } from 'timers';
 import classes from './saveSuccessfully.css'
 
 class SaveSuccessfully extends Component {
     state={
-        seconds: 5
+        seconds: 5,
+        address: 'http://localhost:3000'
     }
 
-    // componentDidMount(){
-    //     let seconds = this.state.seconds
-    //     setInterval(this.countTime(seconds),1000)
-    // }
-
-    countTime = (seconds) => {
-        if(seconds === 0){
-            clearInterval();
-            Window.location.assing(this.props.originAddress)
-        }else{
-            seconds = seconds - 1
-            this.setState({
-                seconds: seconds
-            })
-        }
+    componentDidMount(){
+        console.log('count')
+        const timer = setInterval(()=>{
+            if(this.state.seconds !== 0){
+                this.setState({
+                    seconds: this.state.seconds - 1
+                })
+                console.log(this.state.seconds)
+            }else if(this.state.seconds === 0){
+                clearInterval(timer)
+                window.location.assign(this.state.address+this.props.goBackTo)
+            }
+        }, 1000)
     }
 
     render(){
         return(
-            <div>
+            <div className={classes.saved}>
                 <div className={classes.alertBox}>
                 <p>保存成功！{this.state.seconds}秒后自动返回</p>
-                <Link to='http://localhost:3000/post'><p>点击快速返回</p></Link>
+                <Link to={this.props.goBackTo}><p>点击快速返回</p></Link>
                 </div>
                 <Backdrops show={true} />
             </div>

@@ -3,7 +3,8 @@ import axios from '../../../axios_data';
 import SingleContent from '../../../components/singleContent/singleContent';
 import InputComment from '../../../components/inputPost/inputPost';
 import Button from '../../../components/button/button';
-import YoutubePlayer from '../../../components/youtubePlayer/youtubePlayer'
+import YoutubePlayer from '../../../components/youtubePlayer/youtubePlayer';
+import SaveSuccessfully from '../../../components/saveSuccessfully/saveSuccessfully';
 import marked from 'marked';
 import classes from './lessonDetails.css';
 
@@ -18,6 +19,8 @@ class LessonDetails extends Component {
         id: null,
         videoUrl: null,
         picUrl: null,
+        commentSubmitted: false,
+        wordsCount: null,
     }
 
     componentWillMount(){
@@ -50,11 +53,13 @@ class LessonDetails extends Component {
 
     commentChangeHandler = (event) => {
         const content = event.target.value
+        const wordsCount = content.length
         this.setState({
             comment:{
                 ...this.state.comment,
                 content: content
-            }
+            },
+            wordsCount: wordsCount
         })
     }
 
@@ -66,6 +71,9 @@ class LessonDetails extends Component {
             content: this.state.comment.content,
             time: time
         }
+        this.setState({
+            commentSubmitted: true
+        })
         const request = await this.sendComment(comment, this.state.id)
     }
 
@@ -103,8 +111,12 @@ class LessonDetails extends Component {
                     placeholder={this.state.comment.placeholder}
                     value={this.state.comment.value}
                     change={(event) => this.commentChangeHandler(event)}
-                    inputContentDisplay={commentDisplay} />
+                    inputContentDisplay={commentDisplay}
+                    maxlength='500'
+                    wordsCount={this.state.wordsCount} />
                 <Button onClick={this.submitHandler} name='提交' />
+                {this.state.commentSubmitted === true?
+                    <SaveSuccessfully goBackTo={'/lessons/lesson?id='+this.state.id} /> : null}
             </div>
         )
     }

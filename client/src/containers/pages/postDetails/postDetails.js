@@ -4,6 +4,7 @@ import axios from '../../../axios_data';
 import Button from "../../../components/button/button"
 import SingleContent from '../../../components/singleContent/singleContent';
 import InputPost from '../../../components/inputPost/inputPost';
+import SaveSuccessfully from '../../../components/saveSuccessfully/saveSuccessfully'
 
 class PostDetails extends Component {
     state = {
@@ -14,6 +15,8 @@ class PostDetails extends Component {
             content: "",
         },
         id: null,
+        commentSubmitted: false,
+        wordsCount: null,
     }
 
     componentWillMount(){
@@ -39,12 +42,14 @@ class PostDetails extends Component {
     conmmentValue = (event) => {
         const comment = this.state.comment
         comment.content = event.target.value
+        const wordsCount = comment.content.length
         this.setState({
-            comment: comment
+            comment: comment,
+            wordsCount: wordsCount
         })
     }
 
-    submitHandler = () => {
+    submitHandler = async() => {
         const comment = this.state.comment
         const id = this.state.id
         const time = Date.now()
@@ -55,7 +60,10 @@ class PostDetails extends Component {
             time: time,
             content: comment.content,
         }
-        axios.post('api/sendPostComment',{
+        this.setState({
+            commentSubmitted: true
+        })
+        await axios.post('api/sendPostComment',{
             id: id,
             comment: commentWillSent,
         })
@@ -83,8 +91,12 @@ class PostDetails extends Component {
                     placeholder={comment.placeholder}
                     value={comment.content}
                     change={this.conmmentValue}
-                    inputContentDisplay={commentHtml} />
+                    inputContentDisplay={commentHtml}
+                    wordsCount={this.state.wordsCount}
+                    maxlength='500' />
                 <Button onClick={this.submitHandler} name="提交" />
+                {this.state.commentSubmitted === true?
+                    <SaveSuccessfully goBackTo={'/community/post?id='+this.state.id} /> : null}
             </div>
         )
     }

@@ -12,7 +12,8 @@ const inputValue = (props) => {
                 placeholder={props.placeholder}
                 value={props.value}
                 onChange={props.change}
-                style={props.hide?{display:'none'}:{}} />;
+                style={props.hide?{display:'none'}:{}}
+                maxLength={props.maxlength?props.maxlength:'20'} />;
             break;
         case 'textarea':
             InputContent = (
@@ -22,11 +23,12 @@ const inputValue = (props) => {
                             className = {classes.inputContent}
                             placeholder={props.placeholder}
                             value={props.value}
-                            onChange={props.change}  />
+                            onChange={props.change}
+                            maxLength={props.maxlength?props.maxlength:'10000'}  />
                         <div dangerouslySetInnerHTML={ {__html: props.inputContentDisplay} }
                             className={classes.display} />
                     </div>
-                    <p className={classes.caption}>采用 Markdown 输入</p>
+                    <p className={classes.caption}>{props.wordsCount?props.wordsCount:'0'}/{props.maxlength?props.maxlength:'10000'}  采用 Markdown 输入</p>
                 </div>
             );
             break;

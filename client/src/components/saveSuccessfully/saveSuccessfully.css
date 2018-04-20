@@ -1,5 +1,24 @@
-.alertBox{
-    border: 1px solid;
-    border-radius: 6px;
-    background-color: #ffffff;
+.saved{
+    display: flex;
+    justify-content: space-around;
 }
+
+.alertBox{
+    position: absolute;
+    top: 40%;
+    border: 1px solid grey;
+    border-radius: 10px;
+    height: 100px;
+    width: 220px;
+    background-color: #ffffff;
+    z-index: 500;
+    font-size: 16px;
+    box-shadow: 3px 3px 1px;
+}
+
+.alertBox a{
+    text-decoration: underline;
+    font-size: 14px;
+    color: blue;
+}
+

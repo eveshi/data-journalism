@@ -3,6 +3,7 @@ import axios from '../../../axios_data';
 import marked from 'marked';
 import InputLesson from '../../../components/inputPost/inputPost';
 import Button from '../../../components/button/button';
+import SaveSuccessfully from '../../../components/saveSuccessfully/saveSuccessfully'
 import classes from './newLesson.css';
 
 class NewLesson extends Component{
@@ -45,6 +46,8 @@ class NewLesson extends Component{
         userProfile: {
             value: 'second',
         },
+        submitted: false,
+        wordsCount: null,
     }
 
     submitHandler = async() => {
@@ -57,6 +60,9 @@ class NewLesson extends Component{
         console.log(lesson)
         const timeNow = Date.now()
         lesson.time = timeNow
+        this.setState({
+            submitted: true
+        })
         const request = await this.uploadLesson(lesson)
     }
 
@@ -76,11 +82,13 @@ class NewLesson extends Component{
                 }));
                 break;
             case 'content':
+                const wordsCount = inputValue.length
                 this.setState((prevState) =>({
                     content:{
                         ...prevState.content,
                         value: inputValue
-                    }
+                    },
+                    wordsCount: wordsCount
                 }));
                 break;
             case 'titlePic':
@@ -164,7 +172,8 @@ class NewLesson extends Component{
                         placeholder={this.state.titlePic.placeholder}
                         value={this.state.titlePic.value}
                         hide={this.state.titlePic.hide}
-                        change={(event) => this.changeHandler(event,this.state.titlePic.name)} />
+                        change={(event) => this.changeHandler(event,this.state.titlePic.name)}
+                        maxlength='100' />
                     <Button 
                         onClick={() => this.addMedia(this.state.titlePic.name)} 
                         name={this.state.titlePic.hide?"添加题图":"删除题图"} />
@@ -175,7 +184,8 @@ class NewLesson extends Component{
                         placeholder={this.state.titleVideo.placeholder}
                         value={this.state.titleVideo.value}
                         hide={this.state.titleVideo.hide}
-                        change={(event) => this.changeHandler(event,this.state.titleVideo.name)} />
+                        change={(event) => this.changeHandler(event,this.state.titleVideo.name)}
+                        maxlength='100' />
                     <Button 
                         onClick={() => this.addMedia(this.state.titleVideo.name)} 
                         name={this.state.titleVideo.hide?"添加视频":"删除视频"} />
@@ -185,8 +195,11 @@ class NewLesson extends Component{
                     placeholder={this.state.content.placeholder}
                     value={this.state.content.value}
                     change={(event) => this.changeHandler(event,this.state.content.name)}
-                    inputContentDisplay={contentDisplay} />
+                    inputContentDisplay={contentDisplay}
+                    wordsCount={this.state.wordsCount} />
                 <Button onClick={this.submitHandler} name='提交'/>
+                {this.state.submitted === true?
+                    <SaveSuccessfully goBackTo='/lessons' /> : null}
             </div>
         )
     }
