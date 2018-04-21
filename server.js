@@ -40,19 +40,16 @@ app.post('/api/sendLesson',(req,res) => {
 
 app.get('/api/getPost', (req, res) => {
     const page = req.query.page
-    console.log(page)
     const itemInEveryPage = req.query.itemInEveryPage
-    console.log(itemInEveryPage)
+    const limit = parseInt(itemInEveryPage)
     const skip = (page-1)*itemInEveryPage
     MongoClient.connect(mongoUrl, async(err, client) => {
         if(err){
             console.log(err.stack)
         }
         const db = client.db('data-jour');
-        const postQuery = await db.collection('posts').find().sort({_id:-1}).skip(skip).limit(praseInt(itemInEveryPage)).toArray()
-        console.log(postQuery)
+        const postQuery = await db.collection('posts').find().sort({_id:-1}).skip(skip).limit(limit).toArray()
         const totalNumber = await db.collection('posts').count()
-        console.log(totalNumber)
 
         client.close()
 
@@ -67,7 +64,7 @@ app.get('/api/getPost', (req, res) => {
         })
         const postSentBack = postsSorted(postContentArray)
         const dataSentBack = {
-            postQuerySorted,
+            postSentBack,
             totalNumber: totalNumber
         }
         res.send((dataSentBack));

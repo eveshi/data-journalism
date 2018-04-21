@@ -46,6 +46,9 @@ class NewLesson extends Component{
         userProfile: {
             value: 'second',
         },
+        liked: {
+            value: 0,
+        },
         submitted: false,
         wordsCount: null,
     }

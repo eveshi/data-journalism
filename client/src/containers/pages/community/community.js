@@ -5,7 +5,6 @@ import Aux from '../../../hoc/aux/aux';
 import Button from '../../../components/button/button';
 import PagesNumber from '../../../components/pagesNumber/pagesNumber';
 import classes from './community.css';
-import { URLSearchParams } from 'url';
 
 class Community extends Component {
     state = {
@@ -15,19 +14,28 @@ class Community extends Component {
     }
 
     componentWillMount(){
-        const paramsGet = this.props.location.search
+        this.mountPost(this.props)
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps !== this.Props){
+            this.mountPost(nextProps)
+        }
+    }
+
+    mountPost = (props) => {
+        const paramsGet = props.location.search
+        const pageGet = new URLSearchParams(paramsGet).get('page')
         let page = 1
-        // if(new URLSearchParams(paramsGet).get('page')){
-        //     page = new URLSearchParams(paramsGet).get('page')
-        // } 
-        console.log(page)
+        if(pageGet){
+            page = pageGet
+        } 
         this.getPost(page,this.state.itemInEveryPage).then((postsData) => {
             const pagesNumber = Math.ceil(postsData.totalNumber/6)
             this.setState({
                 posts: postsData.postSentBack,
                 pagesNumber: pagesNumber,
             })
-            console.log(postsData)
         })
     }
 
@@ -38,7 +46,6 @@ class Community extends Component {
                 itemInEveryPage: itemInEveryPage
             }
         })
-        console.log(response.data)
         return response.data;
     }
 
@@ -64,7 +71,7 @@ class Community extends Component {
                 })}
                 <PagesNumber 
                     pagesNumber={this.state.pagesNumber}
-                    address='/community' />
+                    address='/community/page' />
             </Aux>
         )
     }

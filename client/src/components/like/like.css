@@ -1,0 +1,26 @@
+.like{
+    height: 30px;
+    width: 30px;
+    position: absolute;
+    z-index: 500;
+    right: 20px;
+    bottom: 40px;
+    display: flex;
+    flex-direction: row;
+    font-size: 16px;
+}
+
+.like button{
+    background-color: transparent;
+    border: transparent;
+    padding: 0px;
+}
+
+.like img{
+    height: 30px;
+    width: 30px;
+}
+
+.like p{
+    margin: 0px;
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from '../link/link';
+import { NavLink } from 'react-router-dom';
 import classes from './pagesNumber.css';
 
 const pagesNumber = (props) => {
@@ -18,7 +18,7 @@ const pagesNumber = (props) => {
     return (
         <div className={classes.pagesNumber}>
             {pagesArray.map((page) => {
-                return(<Link to={props.address+'/?page='+page}>{page}</Link>)
+                return(<NavLink key={page} to={props.address+'?page='+page}>{page}</NavLink>)
             })}
         </div>
     )

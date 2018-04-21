@@ -5,6 +5,7 @@ import InputComment from '../../../components/inputPost/inputPost';
 import Button from '../../../components/button/button';
 import YoutubePlayer from '../../../components/youtubePlayer/youtubePlayer';
 import SaveSuccessfully from '../../../components/saveSuccessfully/saveSuccessfully';
+import Like from '../../../components/like/like';
 import marked from 'marked';
 import classes from './lessonDetails.css';
 
@@ -21,6 +22,7 @@ class LessonDetails extends Component {
         picUrl: null,
         commentSubmitted: false,
         wordsCount: null,
+        currentLikedState: false,
     }
 
     componentWillMount(){
@@ -84,11 +86,50 @@ class LessonDetails extends Component {
         })
     }
 
+    like = () => {
+        let numbersOfLiked = this.state.content[0].liked
+        let content = this.state.content
+        if(this.state.currentLikedState === false){
+            numbersOfLiked = parseInt(numbersOfLiked) + 1
+            content[0].liked = numbersOfLiked
+            this.setState({
+                content: content
+            })
+            this.updateLikeAndStar(numbersOfLiked,null)
+        }else{
+            numbersOfLiked = parseInt(numbersOfLiked) - 1
+            content[0].liked = numbersOfLiked
+            this.setState({
+                content: content
+            })
+        }
+        this.setState({
+            currentLikedState: ! this.state.currentLikedState
+        })
+        this.updateLikeAndStar(numbersOfLiked, null)
+    }
+
+    updateLikeAndStar = async(numbersOfLiked, numbersOfStared) => {
+        const request = axios.post('api/lessonUpdate', {
+            liked: numbersOfLiked,
+            stared: numbersOfStared
+        })
+    }
+
     render(){
         const comment = this.state.comment
         const commentDisplay = marked(comment.content)
+        let likedNumber = 0
+        if(this.state.content[0]){
+            likedNumber = this.state.content[0].liked
+        }
+
         return(
             <div>
+            <Like 
+                onClick={this.like} 
+                liked={this.state.liked}
+                numbersOfLike={likedNumber} />
                 {this.state.videoUrl?
                     <YoutubePlayer videoUrl={this.state.videoUrl}/>:
                     this.state.picUrl?

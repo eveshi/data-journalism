@@ -13,7 +13,7 @@ const page = () => {
         <Layouts>
             <Route path="/community/newpost" exact component={NewPost} />
             <Route path="/community/post"  component={PostDetails} />
-            <Route path="/community" component={Community} />
+            <Route path="/community/page" component={Community} />
             <Route path="/lessons" exact component={Lesson} />
             <Route path="/lessons/newlesson" exact component={NewLesson} />
             <Route path="/lessons/lesson" component={LessonDetails} />
