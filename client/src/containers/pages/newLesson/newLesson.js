@@ -49,6 +49,9 @@ class NewLesson extends Component{
         liked: {
             value: 0,
         },
+        stared:{
+            value: 0,
+        },
         submitted: false,
         wordsCount: null,
     }

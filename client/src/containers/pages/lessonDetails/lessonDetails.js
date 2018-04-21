@@ -6,6 +6,7 @@ import Button from '../../../components/button/button';
 import YoutubePlayer from '../../../components/youtubePlayer/youtubePlayer';
 import SaveSuccessfully from '../../../components/saveSuccessfully/saveSuccessfully';
 import Like from '../../../components/like/like';
+import Star from '../../../components/star/star';
 import marked from 'marked';
 import classes from './lessonDetails.css';
 
@@ -23,6 +24,7 @@ class LessonDetails extends Component {
         commentSubmitted: false,
         wordsCount: null,
         currentLikedState: false,
+        currentStaredState: false,
     }
 
     componentWillMount(){
@@ -86,50 +88,83 @@ class LessonDetails extends Component {
         })
     }
 
-    like = () => {
+    like = async() => {
         let numbersOfLiked = this.state.content[0].liked
         let content = this.state.content
         if(this.state.currentLikedState === false){
-            numbersOfLiked = parseInt(numbersOfLiked) + 1
+            numbersOfLiked = parseInt(numbersOfLiked,10) + 1
             content[0].liked = numbersOfLiked
             this.setState({
-                content: content
+                content: content,
+                currentLikedState: ! this.state.currentLikedState
             })
-            this.updateLikeAndStar(numbersOfLiked,null)
-        }else{
-            numbersOfLiked = parseInt(numbersOfLiked) - 1
+            console.log(numbersOfLiked)
+        }else if(this.state.currentLikedState === true){
+            numbersOfLiked = parseInt(numbersOfLiked,10) - 1
             content[0].liked = numbersOfLiked
             this.setState({
-                content: content
+                content: content,
+                currentLikedState: ! this.state.currentLikedState
+            })
+            console.log(numbersOfLiked)
+        }
+        const request = await this.updateLikeAndStar(numbersOfLiked, 'noChange')
+    }
+
+    star = async() => {
+        let numbersOfStared = this.state.content[0].stared
+        let content = this.state.content
+        if(this.state.currentStaredState === false){
+            numbersOfStared = parseInt(numbersOfStared, 10) + 1
+            content[0].stared = numbersOfStared
+            this.setState({
+                content: content,
+                currentStaredState: !this.state.currentStaredState
+            })
+        }else if(this.state.currentStaredState === true){
+            numbersOfStared = parseInt(numbersOfStared, 10) - 1
+            content[0].stared = numbersOfStared
+            this.setState({
+                content: content,
+                currentStaredState: !this.state.currentStaredState
             })
         }
-        this.setState({
-            currentLikedState: ! this.state.currentLikedState
-        })
-        this.updateLikeAndStar(numbersOfLiked, null)
+        const request = await this.updateLikeAndStar('noChange', numbersOfStared)
     }
 
     updateLikeAndStar = async(numbersOfLiked, numbersOfStared) => {
-        const request = axios.post('api/lessonUpdate', {
-            liked: numbersOfLiked,
-            stared: numbersOfStared
+        console.log('send now')
+        const request = await axios.get('/api/updateLikeAndStar', {
+            params:{
+                liked: numbersOfLiked,
+                stared: numbersOfStared,
+                id: this.state.id,}
         })
+        console.log(request)
     }
 
     render(){
         const comment = this.state.comment
         const commentDisplay = marked(comment.content)
+
         let likedNumber = 0
+        let staredNumber = 0
         if(this.state.content[0]){
             likedNumber = this.state.content[0].liked
+            staredNumber = this.state.content[0].stared
         }
+
 
         return(
             <div>
             <Like 
                 onClick={this.like} 
-                liked={this.state.liked}
+                liked={this.state.currentLikedState}
                 numbersOfLike={likedNumber} />
+            <Star
+                onClick={this.star}
+                stared={this.state.currentStaredState}
+                numbersOfStar={staredNumber} />
                 {this.state.videoUrl?
                     <YoutubePlayer videoUrl={this.state.videoUrl}/>:
                     this.state.picUrl?

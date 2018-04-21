@@ -188,6 +188,35 @@ app.post('/api/sendLessonComment', (req,res) => {
     })
 })
 
+app.get('/api/updateLikeAndStar', (req,res) => {
+    const liked = req.query.liked
+    const stared = req.query.stared
+    const id = req.query.id
+    MongoClient.connect(mongoUrl, (err,client) => {
+        if(err){
+            console.log(err.stack)
+        }
+
+        const db = client.db('data-jour')
+        if(liked !== 'noChange'){
+            const updateLikeAndStar = db.collection('lessons').update(
+                {_id: MongoID(id)},
+                {
+                    $set:{'lesson.liked': liked}
+                }
+            )
+        }else if(stared !== 'noChange'){
+            const updateLikeAndStar = db.collection('lessons').update(
+                {_id: MongoID(id)},
+                {
+                    $set:{'lesson.stared': stared}
+                }
+            )
+        }
+        client.close()
+    })
+})
+
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 const postsSorted = (postsUnsorted, forDetailPage) => {

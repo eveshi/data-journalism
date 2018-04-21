@@ -1,25 +1,25 @@
-.like{
+.star{
     height: 30px;
     width: 30px;
     position: fixed;
     right: 20px;
-    bottom: 40px;
+    bottom: 80px;
     display: flex;
     flex-direction: row;
     font-size: 16px;
 }
 
-.like button{
+.star button{
     background-color: transparent;
     border: transparent;
     padding: 0px;
 }
 
-.like img{
+.star img{
     height: 30px;
     width: 30px;
 }
 
-.like p{
+.star p{
     margin: 0px;
 }
