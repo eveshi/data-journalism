@@ -8,7 +8,8 @@ const co = require('co');
 
 const app = express();
 console.log('PORT:', process.env.PORT);
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8080;
+app.use(express.static(__dirname + '/public'));
 const mongoUrl = 'mongodb://localhost:27017/data-jour';
 
 app.use(cors());
@@ -53,7 +54,7 @@ app.get('/api/getPost', (req, res) => {
 
         client.close()
 
-        postContentArray = []
+        let postContentArray = []
         postQuery.map((el) => {
             const id = el._id
             const newObject = {
@@ -81,7 +82,7 @@ app.get('/api/postDetails',(req, res) => {
         const postsDetails = await db.collection('posts').findOne({_id: MongoID(id)})
         client.close()
 
-        objectArray = []
+        let objectArray = []
         Object.keys(postsDetails).forEach((key) => {
             objectArray.push(postsDetails[key])
             if(postsDetails[key].comment){
