@@ -20,7 +20,7 @@ class Player extends Component {
         return(
             <div className={classes.container16x9}>
             <iframe id="player" type="text/html" className={classes.player} 
-            src={this.props.videoUrl+"?enablejsapi=1&origin=http://localhost:3000/"} 
+            src={this.props.videoUrl+"?enablejsapi=1"} 
             frameBorder="0" allowFullScreen></iframe>
             </div>
         )

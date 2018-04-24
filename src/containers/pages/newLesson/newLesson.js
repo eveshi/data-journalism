@@ -17,7 +17,7 @@ class NewLesson extends Component{
         titlePic:{
             inputType:'text',
             placeholder: '输入题图地址……',
-            value: 'http://blog.finjs.io/wp-content/uploads/2017/02/474570722.jpg',
+            value: '',
             hide: true,
             name:'titlePic',
         },
@@ -56,7 +56,7 @@ class NewLesson extends Component{
         wordsCount: null,
     }
 
-    submitHandler = async() => {
+    submitHandler = () => {
         let lesson = {}
         for(let key in this.state){
             let lessonElement = {}
@@ -66,10 +66,15 @@ class NewLesson extends Component{
         console.log(lesson)
         const timeNow = Date.now()
         lesson.time = timeNow
+        if(lesson.titlePic === ''){
+            lesson.titlePic = 'http://blog.finjs.io/wp-content/uploads/2017/02/474570722.jpg'
+        }else{
+            console.log('else'+this.state.titlePic.value)
+        }
         this.setState({
             submitted: true
         })
-        const request = await this.uploadLesson(lesson)
+        const request = this.uploadLesson(lesson)
     }
 
     uploadLesson = async(lesson) => await axios.post('/api/sendLesson',{
