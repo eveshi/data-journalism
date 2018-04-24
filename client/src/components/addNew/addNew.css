@@ -1,0 +1,9 @@
+.addNew{
+    position: fixed;
+    bottom: 40px;
+    right: 30px;
+}
+
+.addNew img{
+    width: 60px;
+}

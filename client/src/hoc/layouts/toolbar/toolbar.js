@@ -10,7 +10,7 @@ class Toolbar extends Component {
         menu: [
             { id:'home', name:'主页', link:'/home' },
             { id:'lessons', name:'教学', link:'/lessons' },
-            { id:'community', name:'社区', link:'/community/page?page=1' },            
+            { id:'community', name:'社区', link:'/community'},            
             { id:'about', name:'关于', link:'/about' },
         ],
         loginStatus: true,

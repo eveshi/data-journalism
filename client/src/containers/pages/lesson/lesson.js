@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from '../../../axios_data';
 import SingleLesson from './singleLesson/singleLesson';
 import Button from '../../../components/button/button';
+import AddNew from '../../../components/addNew/addNew';
 import classes from './lesson.css';
 
 class Lesson extends Component {
@@ -66,6 +67,7 @@ class Lesson extends Component {
                                 containVideo={lesson.titleVideo !== '' && lesson.titleVideo?true:false}/>)
                     })}
                 </div>
+                <AddNew link='/lessons/newlesson' />
                 {this.state.noMorePage?
                     <div className={classes.noMoreBox}><p>没有更多了……</p></div>:
                     <Button onClick={this.showMore} name='加载更多'/>} 

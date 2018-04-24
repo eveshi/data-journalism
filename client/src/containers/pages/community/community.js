@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import axios from '../../../axios_data';
 import SinglePost from './singlePost/singlePost';
 import Aux from '../../../hoc/aux/aux';
-import Button from '../../../components/button/button';
 import PagesNumber from '../../../components/pagesNumber/pagesNumber';
+import AddNew from '../../../components/addNew/addNew';
 import classes from './community.css';
 
 class Community extends Component {
@@ -69,6 +69,7 @@ class Community extends Component {
                         </div>
                     )
                 })}
+                <AddNew link='/community/newpost' />
                 <PagesNumber 
                     pagesNumber={this.state.pagesNumber}
                     address='/community/page' />

@@ -1,0 +1,12 @@
+.home{
+    position: absolute;
+    top: 48px;
+}
+
+@media(min-width: 800px){
+    .home{
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+    }
+}

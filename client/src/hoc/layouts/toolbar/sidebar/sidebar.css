@@ -17,9 +17,20 @@
     padding-top: 56px;
     padding-left: 10px;
     font-family: 'Ubuntu', sans-serif;
-    border-bottom: 4px solid #FFFF00;
     margin-bottom: 0px;
     margin-top: 0px;
+    border-bottom: 1px dotted #f1bcbc;
+}
+
+.sidebar img{
+    height: 60px;
+    width: 60px;
+    padding-left: 10px;
+}
+
+.sidebar p{
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 @media (min-width: 500px){
