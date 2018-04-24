@@ -6,28 +6,30 @@ import { setInterval, setTimeout } from 'timers';
 import classes from './saveSuccessfully.css'
 
 class SaveSuccessfully extends Component {
-    // state={
-    //     seconds: 5,
-    // }
+    state={
+        seconds: 5,
+    }
 
-    // componentDidMount(){
-    //     // var that = this
-    //     console.log('count')
-    //     this.timer = setInterval(()=>{
-    //         console.log('still running')
-    //         if(this.state.seconds > 0){
-    //             this.setState({
-    //                 seconds: this.state.seconds - 1
-    //             })
-    //             console.log(this.state.seconds)
-    //         }else if(this.state.seconds === 0){
-    //             clearInterval(this.timer)
-    //             window.history.back()
-    //             console.log(this.state.seconds)
-    //             return false
-    //         }
-    //     }, 1000)
-    // }
+    componentDidMount(){
+        // var that = this
+        console.log('count')
+        this.timer = setInterval(()=>{
+            console.log('still running')
+            if(this.state.seconds > 0){
+                this.setState({
+                    seconds: this.state.seconds - 1
+                })
+                console.log(this.state.seconds)
+            }else if(this.state.seconds === 0){
+                clearInterval(this.timer)
+                window.history.back()
+                console.log(this.state.seconds)
+                console.log('cleared')
+                console.log(this.timer)
+                return false
+            }
+        }, 1000)
+    }
 
     // componentWillUnmount(){
     //     if(this.state.seconds === 0){

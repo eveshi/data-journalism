@@ -22,7 +22,6 @@ class Home extends Component {
         return(
             <div className={classes.home}>
                 {this.state.headlines.map((headline) => {
-                    console.log('ok')
                     return(
                     <Headline 
                         key={headline.order}
