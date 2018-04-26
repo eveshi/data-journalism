@@ -1,4 +1,5 @@
 import React,{ Component } from 'react';
+
 import axios from '../../../axios_data';
 import SingleContent from '../../../components/singleContent/singleContent';
 import InputComment from '../../../components/inputPost/inputPost';
@@ -18,7 +19,6 @@ class LessonDetails extends Component {
             placeholder: '想要输入什么评论呢……',
             content: '',
         },
-        id: null,
         videoUrl: null,
         picUrl: null,
         commentSubmitted: false,
@@ -197,5 +197,6 @@ class LessonDetails extends Component {
         )
     }
 }
+
 
 export default LessonDetails;

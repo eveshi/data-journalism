@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+
 import axios from '../../../axios_data';
 import SingleLesson from './singleLesson/singleLesson';
 import Button from '../../../components/button/button';
 import AddNew from '../../../components/addNew/addNew';
+
 import classes from './lesson.css';
 
 class Lesson extends Component {
