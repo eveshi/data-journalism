@@ -5,15 +5,20 @@ import App from './containers/App/App';
 import registerServiceWorker from './registerServiceWorker';
 import axios from 'axios';
 
-axios.interceptors.request.use(request => {
-    console.log(request);
-    return request;
-})
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
+import getData from './store/reducer/getData.js'
 
-axios.interceptors.response.use(response => {
-    console.log(response);
-    return response;
-})
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const store = createStore(getData, composeEnhancers(
+    applyMiddleware(thunk)
+  ));
+
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>, 
+    document.getElementById('root'));
 registerServiceWorker();

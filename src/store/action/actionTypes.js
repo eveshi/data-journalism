@@ -1,0 +1,4 @@
+export const GET_POSTS = 'GET_POSTS'
+export const GET_LESSONS = 'GET_LESSONS'
+export const GET_POST_DETAILS = 'GET_POST_DETAILS'
+export const GET_LESSON_DETAILS = 'GET_LESSON_DETAILS'
