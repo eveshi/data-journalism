@@ -4,7 +4,7 @@
   "proxy": "http://localhost:8080/",
   "scripts": {
     "client": "node scripts/start.js",
-    "server": "node server.js",
+    "server": "node server/routes/server.js",
     "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js —env=jsdom",
@@ -39,6 +39,7 @@
     "jest": "20.0.4",
     "marked": "^0.3.17",
     "mongodb": "^3.0.4",
+    "mongoose": "^5.0.16",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "^3.2.0",
     "postcss-loader": "^2.0.8",

@@ -7,6 +7,7 @@ import PostDetails from '../pages/postDetails/postDetails';
 import Lesson from '../pages/lesson/lesson';
 import NewLesson from './newLesson/newLesson';
 import LessonDetails from './lessonDetails/lessonDetails';
+import Signin from './loginOrSignin/loginOrSignin';
 import Home from './home/home'
 
 const page = () => {
@@ -22,6 +23,7 @@ const page = () => {
             <Route path="/lessons/lesson" component={LessonDetails} />
             <Route path="/home" exact component={Home} />
             <Route path="/" exact component={Home} />
+            <Route path='/signin' component={Signin} />
         </Layouts>
     )
 }

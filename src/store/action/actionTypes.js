@@ -1,5 +1,2 @@
-export const GET_INIT_STATE = 'GET_INIT_STATE'
-export const GET_ITEMS = 'GET_ITEMS'
-export const GET_ITEM_DETAILS = 'GET_ITEM_DETAILS'
-export const GET_ID = 'GET_ID'
-export const ERROR_CATCH = 'ERROR_CATCH'
+export const LOGIN_SUCCESSFULLY = 'LOGIN_SUCCESSFULLY'
+export const LOGIN_FAILED = 'LOGIN_FAILED'

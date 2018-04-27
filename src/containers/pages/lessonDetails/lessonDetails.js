@@ -192,7 +192,7 @@ class LessonDetails extends Component {
                     wordsCount={this.state.wordsCount} />
                 <Button onClick={this.submitHandler} name='提交' />
                 {this.state.commentSubmitted === true?
-                    <SaveSuccessfully goBackTo={'/lessons/lesson?id='+this.state.id} /> : null}
+                    <SaveSuccessfully goBackTo='/lessons' /> : null}
             </div>
         )
     }

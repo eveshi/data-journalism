@@ -13,7 +13,8 @@ const inputValue = (props) => {
                 value={props.value}
                 onChange={props.change}
                 style={props.hide?{display:'none'}:{}}
-                maxLength={props.maxlength?props.maxlength:'20'} />;
+                maxLength={props.maxlength?props.maxlength:'20'}
+                type={props.type} />;
             break;
         case 'textarea':
             InputContent = (

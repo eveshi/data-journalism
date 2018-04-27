@@ -269,3 +269,21 @@ const postsSorted = (postsUnsorted, forDetailPage) => {
     })
     return postsSorted
 }
+
+//userLogin
+
+app.post('/api/login',(req,res) => {
+    const data = req.body.userLoginData
+    console.log(data)
+    const userData = {
+        name: 'eve',
+        email: 'text@text.com',
+        password: 'dhidhoidhq',
+        profilePic: 'second',
+        stared: [],
+        liked: [],
+        post: [],
+        category: 'basic',
+    }
+    res.send(userData)
+})

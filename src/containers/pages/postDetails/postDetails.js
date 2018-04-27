@@ -96,7 +96,7 @@ class PostDetails extends Component {
                     maxlength='500' />
                 <Button onClick={this.submitHandler} name="提交" />
                 {this.state.commentSubmitted === true?
-                    <SaveSuccessfully goBackTo={'/community/post?id='+this.state.id} /> : null}
+                    <SaveSuccessfully goBackTo='/community' /> : null}
             </div>
         )
     }
