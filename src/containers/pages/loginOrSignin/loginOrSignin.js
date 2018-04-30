@@ -99,11 +99,12 @@ class LoginOrSignin extends Component {
     }
 
     signinSubmitHandler = () => {
-
+        console.log(this.props.userData)
     }
 
     loginSubmitHandler = () => {
         this.props.login('login')
+        console.log(this.props.userData)
     }
 
     render(){

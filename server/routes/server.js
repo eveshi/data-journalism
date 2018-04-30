@@ -1,8 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-var bodyParser = require('body-parser');
+let bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const MongoID = require('mongodb').ObjectId;
+const mongooseModel = require('../models/user')
+
 const assert = require('assert');
 const co = require('co');
 
@@ -285,5 +287,11 @@ app.post('/api/login',(req,res) => {
         post: [],
         category: 'basic',
     }
+    const user = new mongooseModel(userData)
+
+    user.save().catch(err => {
+        console.log(err.stack)
+    })
+
     res.send(userData)
 })

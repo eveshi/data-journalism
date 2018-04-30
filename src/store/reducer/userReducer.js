@@ -16,7 +16,7 @@ const initState = {
     }
 }
 
-const loginSeccessfully = (state, action) => {
+const loginSuccessfully = (state, action) => {
     const updatedState = {
         login: action.login,
         userData: action.userData
@@ -33,9 +33,9 @@ const loginFailed = (state, action) => {
 }
 
 const reducer = (state=initState, action) => {
-    switch(action.actionTypes){
+    switch(action.type){
         case actionTypes.LOGIN_SUCCESSFULLY:
-            return loginSeccessfully(state, action);
+            return loginSuccessfully(state, action);
         case actionTypes.LOGIN_FAILED:
             return loginFailed(state, action);
         default:
