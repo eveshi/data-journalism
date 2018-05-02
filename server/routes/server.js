@@ -272,26 +272,43 @@ const postsSorted = (postsUnsorted, forDetailPage) => {
     return postsSorted
 }
 
-//userLogin
+//userSignin
 
-app.post('/api/login',(req,res) => {
-    const data = req.body.userLoginData
-    console.log(data)
-    const userData = {
-        name: 'eve',
-        email: 'text@text.com',
-        password: 'dhidhoidhq',
-        profilePic: 'second',
-        stared: [],
-        liked: [],
-        post: [],
-        category: 'basic',
-    }
-    const user = new mongooseModel(userData)
-
-    user.save().catch(err => {
-        console.log(err.stack)
+app.post('/api/signin',(req,res) => {
+    const userData = req.body.newUser
+    const email=userData.email
+    mongooseModel.findOne({email:email}, (err, user)=>{
+        if(err){
+            console.log(err.stack)
+        }
+        if(user){
+            res.send('The email has been registered')
+        }else{
+            const newUser = new mongooseModel(userData)
+            newUser.save(
+                () => {
+                    res.send('Successfully Registered')
+                }
+            )
+        }
     })
+})
 
-    res.send(userData)
+app.post('/api/login', (req,res) => {
+    const userData = req.body.oldUser
+    const email = userData.email
+    const password = userData.password
+    mongooseModel.findOne({email:email}, (err, user)=>{
+        if(err){
+        }
+        if(user){
+            if(user.password === password){
+                res.send(user)
+            }else{
+                res.send('wrong password')
+            }
+        }else{
+            res.send('invalid email')
+        }
+    })
 })

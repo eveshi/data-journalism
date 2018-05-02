@@ -1,0 +1,84 @@
+.pageDesign{
+    position: absolute;
+    top: 48px;
+    width: 100%;
+}
+
+.pageDesign form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pageDesign input{
+    margin: 10px;
+    height: 25px;
+    font-size: 14px;
+    border-bottom: 1.3px solid grey;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    width: 200px;
+    background-color: transparent;
+}
+
+.pageDesign button{
+    width: 200px;
+    height: 40px;
+    background-color: transparent;
+    border-radius: 5px;
+    box-shadow: 0.5px 1px 0.5px grey;
+    font-size: 18px;
+    margin-top: 0px;
+    color: darkolivegreen;
+    font-weight: lighter;
+}
+
+.pageDesign a{
+    margin-bottom: 100px;
+    font-size: 14px;
+    color: cadetblue;
+    text-decoration: underline;
+}
+
+.signin{
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: white;
+}
+
+.login{
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgba(206, 234, 234, 0.41)
+}
+
+.login button{
+    margin-bottom: 100px;
+}
+
+.head{
+    font-size: 28px;
+    color: darkslategrey;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 0px;
+}
+
+.singleItem{
+    height: 40px;
+    width: 90%;
+    display: flex;
+}
+
+.singleItem p{
+    width: 80px;
+    font-size: 13px;
+    margin-top: 20px;
+}
