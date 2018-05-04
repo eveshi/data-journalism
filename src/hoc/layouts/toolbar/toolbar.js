@@ -3,18 +3,10 @@ import Sidebar from './sidebar/sidebar';
 import Aux from '../../aux/aux';
 import Backdrops from '../../../components/backdrops/backdrops';
 import classes from './toolbar.css';
-import icon from '../../../assets/images/menu.png';
+import menu from '../../../assets/images/menu.png'
 
 class Toolbar extends Component {
     state = {
-        menu: [
-            { id:'home', name:'主页', link:'/home' },
-            { id:'lessons', name:'教学', link:'/lessons' },
-            { id:'community', name:'社区', link:'/community'},            
-            { id:'about', name:'关于', link:'/about' },
-        ],
-        loginStatus: true,
-        userName: 'eve',
         showSidebar: false,
     }
 
@@ -33,7 +25,7 @@ class Toolbar extends Component {
     render() {return (
         <Aux>
             <div className={classes.toolbar}>
-                <img src={icon} alt='菜单' onClick={this.showSidebar} />
+                <img src={menu} alt='菜单' onClick={this.showSidebar} />
                 <p>数据新闻</p>
             </div>
             <div>
@@ -43,9 +35,7 @@ class Toolbar extends Component {
                 <Sidebar
                     click={this.hideSidebar}
                     show={this.state.showSidebar}
-                    menu={this.state.menu}
-                    loginStatus={this.state.loginStatus}
-                    userName={this.state.userName} />
+                    menu={this.state.menu} />
             </div>
         </Aux>
     )}

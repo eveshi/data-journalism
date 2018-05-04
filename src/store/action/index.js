@@ -1,3 +1,4 @@
 export {
-    loginSuccessfully
+    loginSuccessfully,
+    logout
 } from './user'

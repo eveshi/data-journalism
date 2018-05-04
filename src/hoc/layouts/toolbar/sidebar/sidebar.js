@@ -10,12 +10,11 @@ const sidebar = (props) => {
             className={classes.sidebar} 
             style={props.show?{}:{display:'none'}}
             onClick={props.click}>
-            <img src={icon} alt='icon' />
-            <p className={classes.title}>数据新闻</p>
-            <Menu menuList={props.menu}/>
+            <p className={classes.title}>DATA-JOURNALISM</p>
             <UserLog 
                 loginStatus={props.loginStatus}
                 userName={props.userName} />
+            <Menu menuList={props.menu}/>
         </div>
     )
 }

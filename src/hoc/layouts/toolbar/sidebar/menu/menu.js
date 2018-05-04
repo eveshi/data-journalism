@@ -1,16 +1,36 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import Aux from '../../../../aux/aux';
 import classes from './menu.css';
 
-const menu = (props) => props.menuList.map((el) => {
-    return (
-        <Aux key={ el.id }>
-            <NavLink to={ el.link } className={classes.menu} activeClassName={classes.active}>
-                <p>{ el.name }</p>
-            </NavLink>
-        </Aux>
-    )
-});
+import home from '../../../../../assets/images/home.svg';
+import lesson from '../../../../../assets/images/lesson.svg';
+import community from '../../../../../assets/images/community.svg';
+import about from '../../../../../assets/images/about.svg';
 
-export default menu;
+class Menu extends Component {
+    state = {
+        menu: [
+            { id:'home', name:'主页', link:'/home', icon: home },
+            { id:'lessons', name:'教学', link:'/lessons', icon: lesson },
+            { id:'community', name:'社区', link:'/community', icon: community},            
+            { id:'about', name:'关于', link:'/about', icon: about },
+        ]
+    }
+
+    render(){
+        return(
+            this.state.menu.map((el) => {
+                return(
+                    <div key={ el.id } className={classes.singleMenu}>
+                        <img src={el.icon} alt='icon'/>
+                        <NavLink to={ el.link } activeClassName={classes.active}>
+                            <p>{ el.name }</p>
+                        </NavLink>
+                    </div> 
+                )
+            })
+        )
+    }
+}
+
+export default Menu;

@@ -1,18 +1,25 @@
-.menu{
-    height: 50px;
-    font-size: 24px;
-    border-bottom: 3px solid #cacaca;
+.singleMenu{
+    display: flex;
+    flex-direction: row;
+    height: 40px;
+    border-bottom: 0.2px solid #cacaca;
     padding-left: 13px;
     padding-bottom: 5px;
-    background-color: #daeadcc4;
 }
 
-.menu p{
-    margin: 10px;
+.singleMenu img{
+    height: 30px;
+    margin-top: 10px;
+}
+
+.singleMenu p{
+    margin-top: 8px;
+    font-size: 20px;
+    font-weight: lighter;
+    margin-left: 15px;
 }
 
 .active{
-    background-color: #587979;
-    color: white;
-    border-bottom: 3px solid #d6c4c4;
+    color: #587979;
+    font-weight: bolder;
 }

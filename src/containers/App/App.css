@@ -2,3 +2,8 @@
   font-family: FZpixes;
   src: url('../../assets/font/FZXIANGSU15.TTF')
 }
+
+@font-face{
+  font-family: Monoton;
+  src: url('../../assets/font/Monoton-Regular.ttf')
+}

@@ -32,12 +32,22 @@ const loginFailed = (state, action) => {
     return updateObject(state, updatedState)
 }
 
+const logout = (state, action) => {
+    const updatedState = {
+        login: action.login,
+        userData: action.userData
+    }
+    return updateObject(state, updatedState)
+}
+
 const reducer = (state=initState, action) => {
     switch(action.type){
         case actionTypes.LOGIN_SUCCESSFULLY:
             return loginSuccessfully(state, action);
         case actionTypes.LOGIN_FAILED:
             return loginFailed(state, action);
+        case actionTypes.LOGOUT:
+            return logout(state, action);
         default:
             return state;
     }

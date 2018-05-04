@@ -1,0 +1,51 @@
+.login{
+    border-bottom: 0.2px solid #cacaca;
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center
+}
+
+.login a{
+    border: 1px solid #6fe678;
+    background-color: #a7eaa7;
+    border-radius: 15px;
+    color: white;
+    font-size: 16px;
+    height: 28px;
+    width: 100px;
+    text-align: center;
+    padding-top: 5px;
+}
+
+.logout{
+    border-bottom: 0.2px solid #cacaca;
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.logout img{
+    height: 80px;
+}
+
+.logout p{
+    padding: 0px;
+    margin: 0px;
+}
+
+.logout button{
+    border: 1px solid #6fe678;
+    background-color: #a7eaa7;
+    border-radius: 15px;
+    color: white;
+    font-size: 14px;
+    height: 28px;
+    width: 60px;
+    text-align: center;
+    padding-top: 2px;
+}
+
