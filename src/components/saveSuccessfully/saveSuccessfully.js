@@ -1,4 +1,3 @@
-//还是做成弹框形式比较好，然后要有倒数的数字
 import React, { Component } from 'react';
 import Backdrops from '../backdrops/backdrops';
 import Link from '../link/link';
@@ -11,15 +10,12 @@ class SaveSuccessfully extends Component {
 
     componentDidMount(){
         this.timer = setInterval(()=>{
-            console.log('still running')
             if(this.state.seconds > 0){
                 this.setState({
                     seconds: this.state.seconds - 1
                 })
-                console.log(this.state.seconds)
             }else if(this.state.seconds === 0){
                 window.history.back()
-                console.log(this.state.seconds)
                 return false
             }
         }, 1000)
@@ -27,7 +23,6 @@ class SaveSuccessfully extends Component {
 
     componentWillUnmount(){
         clearInterval(this.timer)
-        console.log("unmount")
         return true
     }
 

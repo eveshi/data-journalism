@@ -128,7 +128,6 @@ class LoginOrSignin extends Component {
                 window.history.back()
             }
         })
-        // this.props.signin(newUser)
     }
 
     loginSubmitHandler = () => {

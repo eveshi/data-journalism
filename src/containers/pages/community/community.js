@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import axios from '../../../axios_data';
 import SinglePost from './singlePost/singlePost';
 import Aux from '../../../hoc/aux/aux';
@@ -69,7 +70,8 @@ class Community extends Component {
                         </div>
                     )
                 })}
-                <AddNew link='/community/newpost' />
+                <AddNew login={this.props.login}
+                        link='/community/newpost'/>
                 <PagesNumber 
                     pagesNumber={this.state.pagesNumber}
                     address='/community/page' />
@@ -78,4 +80,11 @@ class Community extends Component {
     }
 }
 
-export default Community;
+const mapStateToProps = state => {
+    return{
+        login: state.login,
+        userData: state.userData
+    }
+}
+
+export default connect(mapStateToProps)(Community);

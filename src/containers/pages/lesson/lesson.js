@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import axios from '../../../axios_data';
 import SingleLesson from './singleLesson/singleLesson';
@@ -55,6 +56,11 @@ class Lesson extends Component {
     }
 
     render(){
+        let showAddNew = true
+        if(this.props.userData.category !== 'admin'){
+            showAddNew = false
+        }
+
         return(
             <div className={classes.lessonsPage}>
                 <div className={classes.lessons}>
@@ -69,7 +75,10 @@ class Lesson extends Component {
                                 containVideo={lesson.titleVideo !== '' && lesson.titleVideo?true:false}/>)
                     })}
                 </div>
-                <AddNew link='/lessons/newlesson' />
+                {showAddNew?
+                    {}:
+                    <AddNew login={this.props.login}
+                        link='/lessons/newlesson'/>}
                 {this.state.noMorePage?
                     <div className={classes.noMoreBox}><p>没有更多了……</p></div>:
                     <Button onClick={this.showMore} name='加载更多'/>} 
@@ -78,4 +87,11 @@ class Lesson extends Component {
     }
 }
 
-export default Lesson;
+const mapStateToProps = state => {
+    return{
+        login: state.login,
+        userData: state.userData
+    }
+}
+
+export default connect(mapStateToProps)(Lesson);
