@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import axios from '../../../axios_data';
 import marked from 'marked';
 import InputLesson from '../../../components/inputPost/inputPost';
+import AlertBox from '../../../components/alertBox/alertBox';
 import Button from '../../../components/button/button';
-import SaveSuccessfully from '../../../components/saveSuccessfully/saveSuccessfully'
+import SaveSuccessfully from '../../../components/saveSuccessfully/saveSuccessfully';
 import classes from './newLesson.css';
 
 class NewLesson extends Component{
@@ -41,10 +43,10 @@ class NewLesson extends Component{
             value: null,
         },
         user:{
-            value: 'admin',
+            value: '',
         },
         userProfile: {
-            value: 'second',
+            value: '',
         },
         liked: {
             value: 0,
@@ -54,6 +56,15 @@ class NewLesson extends Component{
         },
         submitted: false,
         wordsCount: null,
+        unLoginAlert: false
+    }
+
+    componentWillMount(){
+        if(this.props.login === false){
+            this.setState({
+                unLoginAlert: true
+            })
+        }
     }
 
     submitHandler = () => {
@@ -63,7 +74,8 @@ class NewLesson extends Component{
             lessonElement[key] = this.state[key].value
             lesson = {...lesson, ...lessonElement}
         }
-        console.log(lesson)
+        lesson.user = this.props.userData.name
+        lesson.userProfile = this.props.userData.profilePic
         const timeNow = Date.now()
         lesson.time = timeNow
         if(lesson.titlePic === ''){
@@ -74,11 +86,12 @@ class NewLesson extends Component{
         this.setState({
             submitted: true
         })
-        const request = this.uploadLesson(lesson)
+        const request = this.uploadLesson(lesson, this.props.userData.email)
     }
 
-    uploadLesson = async(lesson) => await axios.post('/api/sendLesson',{
-        lesson: lesson
+    uploadLesson = async(lesson, email) => await axios.post('/api/sendLesson',{
+        lesson: lesson,
+        email: email
     })
 
     changeHandler = (event, name) => {
@@ -211,9 +224,20 @@ class NewLesson extends Component{
                 <Button onClick={this.submitHandler} name='提交'/>
                 {this.state.submitted === true?
                     <SaveSuccessfully goBackTo='/lessons' /> : null}
+                {this.state.unLoginAlert === true?
+                    <AlertBox alertContent='请登录后再进行操作' 
+                        nextStepWithLink='返回主页'
+                        goBackTo='/home'/>:null}
             </div>
         )
     }
 }
 
-export default NewLesson;
+const mapStateToProps = state => {
+    return{
+        login: state.login,
+        userData: state.userData
+    }
+}
+
+export default connect(mapStateToProps)(NewLesson);

@@ -63,7 +63,7 @@ class Community extends Component {
                             <SinglePost
                                 id={el['id']}
                                 userProfile={el['userProfile']}
-                                userName={el['userName']}
+                                userName={el['user']}
                                 title={el['title']}
                                 updateTime={el['time']}
                                 commentNumber={commentNumber} /> 

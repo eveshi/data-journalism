@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import axios from '../../../axios_data';
 import Button from '../../../components/button/button'
 import marked from 'marked';
+import AlertBox from '../../../components/alertBox/alertBox';
 import InputPost from '../../../components/inputPost/inputPost';
 import SaveSuccessfully from '../../../components/saveSuccessfully/saveSuccessfully';
 import classes from './newPost.css';
@@ -11,11 +13,11 @@ class NewPost extends Component {
         postData: {
             user: {
                 inputType: null,
-                value: 'admin',
+                value: '',
             },
             userProfile: {
                 inputType: null,
-                value: 'second',
+                value: '',
             },
             title: {
                 inputType: 'text',
@@ -39,10 +41,21 @@ class NewPost extends Component {
         update: true,
         submitted: false,
         wordsCount: null,
+        unLoginAlert: false
+    }
+
+    componentWillMount(){
+        if(this.props.login === false){
+            this.setState({
+                unLoginAlert: true
+            })
+        }
     }
 
     submitHandler = async() => {
-        let postData = this.state.postData
+        let postData = {...this.state.postData}
+        postData.user.value = this.props.userData.name
+        postData.userProfile.value = this.props.userData.profilePic
         const time = Date.now()
         postData.time.value = time
         console.log(time)
@@ -56,7 +69,8 @@ class NewPost extends Component {
             submitted: true
         })
         const request = await axios.post('/api/sendPost',{
-            mainContent: postWillBeSent
+            mainContent: postWillBeSent,
+            userEmail: this.props.userData.email
         })
     }
 
@@ -106,9 +120,20 @@ class NewPost extends Component {
                 <Button onClick={this.submitHandler} name="提交" />
                 {this.state.submitted === true?
                     <SaveSuccessfully goBackTo='/community' /> : null}
+                {this.state.unLoginAlert === true?
+                    <AlertBox alertContent='请登录后再进行操作' 
+                        nextStepWithLink='返回主页'
+                        goBackTo='/home'/>:null}
             </div>
         )
     }
 };
 
-export default NewPost;
+const mapStateToProps = state => {
+    return{
+        login: state.login,
+        userData: state.userData
+    }
+}
+
+export default connect(mapStateToProps)(NewPost);

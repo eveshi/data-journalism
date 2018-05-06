@@ -12,7 +12,7 @@ const singleLesson = (props) => {
             </div>
             <div className={classes.titleContent}>
                 <p className={classes.title}>{props.title}</p>
-                <p className={classes.time}>发布于{props.uploadTime}前</p>
+                <p className={classes.time}>{props.userName}发布于{props.uploadTime}前</p>
             </div>
         </Link>
     )

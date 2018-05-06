@@ -16,7 +16,9 @@ class UserLog extends Component {
                         <ProfilePic userProfile={this.props.userData.profilePic} />
                         <p>{this.props.userData.name}</p>
                     </NavLink>
-                    <button onClick={this.props.logout}>登出</button>
+                    <NavLink className={classes.logoutButton}
+                        to='/home'
+                        onClick={this.props.logout}>登出</NavLink>
                 </div>           
                 <div className={classes.login} 
                     style={this.props.login? {display:'none'}:{}}>

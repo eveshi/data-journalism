@@ -1,9 +1,10 @@
 import React,{ Component } from 'react';
-
+import { connect } from 'react-redux';
 import axios from '../../../axios_data';
 import SingleContent from '../../../components/singleContent/singleContent';
 import InputComment from '../../../components/inputPost/inputPost';
 import Button from '../../../components/button/button';
+import AlertBox from '../../../components/alertBox/alertBox';
 import YoutubePlayer from '../../../components/youtubePlayer/youtubePlayer';
 import SaveSuccessfully from '../../../components/saveSuccessfully/saveSuccessfully';
 import Like from '../../../components/like/like';
@@ -25,6 +26,7 @@ class LessonDetails extends Component {
         wordsCount: null,
         currentLikedState: false,
         currentStaredState: false,
+        unLoginAlert: false
     }
 
     componentWillMount(){
@@ -67,24 +69,31 @@ class LessonDetails extends Component {
         })
     }
 
+    unLoginAlertChangeHandler = () => {
+        this.setState({
+            unLoginAlert: ! this.state.unLoginAlert
+        })
+    }
+
     submitHandler = async() => {
         const time = Date.now()
         const comment = {
-            user: 'akb48',
-            userProfile: 'first',
+            user: this.props.userData.name,
+            userProfile: this.props.userData.profilePic,
             content: this.state.comment.content,
             time: time
         }
         this.setState({
             commentSubmitted: true
         })
-        const request = await this.sendComment(comment, this.state.id)
+        const request = await this.sendComment(comment, this.state.id, this.props.userData.email)
     }
 
-    sendComment = async(comment, id) => {
+    sendComment = async(comment, id, email) => {
         const request = await axios.post('/api/sendLessonComment', {
             comment:comment,
-            id: id
+            id: id,
+            email: email
         })
     }
 
@@ -156,9 +165,9 @@ class LessonDetails extends Component {
 
 
         return(
-            <div>
+            <div className={classes.lessonDetails}>
             <Like 
-                onClick={this.like} 
+                onClick={this.like}
                 liked={this.state.currentLikedState}
                 numbersOfLike={likedNumber} />
             <Star
@@ -182,21 +191,37 @@ class LessonDetails extends Component {
                             content={content.content} />
                     )
                 })}
-                <InputComment 
-                    inputType={this.state.comment.inputType}
-                    placeholder={this.state.comment.placeholder}
-                    value={this.state.comment.value}
-                    change={(event) => this.commentChangeHandler(event)}
-                    inputContentDisplay={commentDisplay}
-                    maxlength='500'
-                    wordsCount={this.state.wordsCount} />
-                <Button onClick={this.submitHandler} name='提交' />
+                {this.props.login?
+                    <div>
+                        <InputComment 
+                            inputType={this.state.comment.inputType}
+                            placeholder={this.state.comment.placeholder}
+                            value={this.state.comment.value}
+                            change={(event) => this.commentChangeHandler(event)}
+                            inputContentDisplay={commentDisplay}
+                            maxlength='500'
+                            wordsCount={this.state.wordsCount} />
+                        <Button onClick={this.submitHandler} name='提交' />
+                    </div>:
+                    <p className={classes.addComment}
+                        onClick={this.unLoginAlertChangeHandler}>添加评论</p>}
                 {this.state.commentSubmitted === true?
                     <SaveSuccessfully goBackTo='/lessons' /> : null}
+                {this.state.unLoginAlert === true?
+                    <AlertBox alertContent='请登录后再进行评论' 
+                        nextStep='确定'
+                        goBackTo=''
+                        onClick={this.unLoginAlertChangeHandler} />:null}
             </div>
         )
     }
 }
 
+const mapStateToProps = state => {
+    return{
+        login: state.login,
+        userData: state.userData
+    }
+}
 
-export default LessonDetails;
+export default connect(mapStateToProps)(LessonDetails);

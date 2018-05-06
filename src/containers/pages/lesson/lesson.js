@@ -68,6 +68,7 @@ class Lesson extends Component {
                         return(
                             <SingleLesson 
                                 key={lesson.key}
+                                userName={lesson.user}
                                 address={lesson.id}
                                 title={lesson.title}
                                 titlePic={lesson.titlePic}
@@ -76,9 +77,9 @@ class Lesson extends Component {
                     })}
                 </div>
                 {showAddNew?
-                    {}:
                     <AddNew login={this.props.login}
-                        link='/lessons/newlesson'/>}
+                    link='/lessons/newlesson'/>:null
+                }
                 {this.state.noMorePage?
                     <div className={classes.noMoreBox}><p>没有更多了……</p></div>:
                     <Button onClick={this.showMore} name='加载更多'/>} 

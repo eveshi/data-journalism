@@ -1,10 +1,13 @@
 import React,{ Component } from 'react';
+import { connect } from 'react-redux';
 import marked from 'marked';
 import axios from '../../../axios_data';
 import Button from "../../../components/button/button"
 import SingleContent from '../../../components/singleContent/singleContent';
+import AlertBox from '../../../components/alertBox/alertBox';
 import InputPost from '../../../components/inputPost/inputPost';
 import SaveSuccessfully from '../../../components/saveSuccessfully/saveSuccessfully'
+import classes from './postDetails.css'
 
 class PostDetails extends Component {
     state = {
@@ -17,6 +20,7 @@ class PostDetails extends Component {
         id: null,
         commentSubmitted: false,
         wordsCount: null,
+        unLoginAlert: false
     }
 
     componentWillMount(){
@@ -28,7 +32,7 @@ class PostDetails extends Component {
                 id: id
             })
         })
-    }   
+    } 
 
     getPost = async(id) => {
         const response = await axios.get('/api/postDetails',{
@@ -37,6 +41,12 @@ class PostDetails extends Component {
             }
         })
         return response.data
+    }
+
+    unLoginAlertChangeHandler = () => {
+        this.setState({
+            unLoginAlert: ! this.state.unLoginAlert
+        })
     }
 
     conmmentValue = (event) => {
@@ -55,8 +65,8 @@ class PostDetails extends Component {
         const time = Date.now()
 
         const commentWillSent = {
-            user: "admin",
-            userProfile: "third",
+            user: this.props.userData.name,
+            userProfile: this.props.userData.profilePic,
             time: time,
             content: comment.content,
         }
@@ -66,6 +76,7 @@ class PostDetails extends Component {
         await axios.post('api/sendPostComment',{
             id: id,
             comment: commentWillSent,
+            email: this.props.userData.email
         })
     }
 
@@ -74,7 +85,7 @@ class PostDetails extends Component {
         const commentHtml = marked(comment.content)
 
         return(
-            <div>
+            <div className={classes.postDetails}>
                 {this.state.post.map((el, index) => {
                     const content = marked(el.content)
 
@@ -82,24 +93,41 @@ class PostDetails extends Component {
                         key={index}
                         userProfile={el.userProfile}
                         title={el.title}
-                        userName={el.userName}
+                        userName={el.user}
                         updateTime={el.time}
                         content={content} />
                 })}
-                <InputPost
-                    inputType={comment.inputType}
-                    placeholder={comment.placeholder}
-                    value={comment.content}
-                    change={this.conmmentValue}
-                    inputContentDisplay={commentHtml}
-                    wordsCount={this.state.wordsCount}
-                    maxlength='500' />
-                <Button onClick={this.submitHandler} name="提交" />
+                {this.props.login?
+                    <div>
+                        <InputPost
+                            inputType={comment.inputType}
+                            placeholder={comment.placeholder}
+                            value={comment.content}
+                            change={this.conmmentValue}
+                            inputContentDisplay={commentHtml}
+                            wordsCount={this.state.wordsCount}
+                            maxlength='500' />
+                        <Button onClick={this.submitHandler} name="提交" />
+                    </div>:
+                    <p className={classes.addComment}
+                        onClick={this.unLoginAlertChangeHandler}>添加评论</p>}
                 {this.state.commentSubmitted === true?
                     <SaveSuccessfully goBackTo='/community' /> : null}
+                {this.state.unLoginAlert === true?
+                    <AlertBox alertContent='请登录后再进行评论' 
+                        nextStep='确定'
+                        goBackTo=''
+                        onClick={this.unLoginAlertChangeHandler} />:null}
             </div>
         )
     }
 };
 
-export default PostDetails;
+const mapStateToProps = state => {
+    return{
+        login: state.login,
+        userData: state.userData
+    }
+}
+
+export default connect(mapStateToProps)(PostDetails);

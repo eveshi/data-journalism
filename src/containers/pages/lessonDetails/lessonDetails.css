@@ -3,6 +3,22 @@
     height: 360px;
 }
 
+.lessonDetails{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.addComment{
+    border: 1px solid grey;
+    width: 100px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: grey;
+    box-shadow: 0.5px 1px 0.5px grey;
+    margin-top: 30px;
+}
+
 @media(max-width: 711px){
     .titlePic{
         width: 90%;

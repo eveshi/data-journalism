@@ -35,17 +35,17 @@
 .logout p{
     padding: 0px;
     margin: 0px;
+    text-align: center;
 }
 
-.logout button{
+.logoutButton{
     border: 1px solid #6fe678;
     background-color: #a7eaa7;
     border-radius: 15px;
     color: white;
     font-size: 14px;
-    height: 28px;
+    height: 22px;
     width: 60px;
     text-align: center;
-    padding-top: 2px;
 }
 

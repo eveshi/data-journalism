@@ -11,27 +11,38 @@ class AddNew extends Component{
 
     loginAlertHandler = () => {
         this.setState({
-            showLoginAlert: ! this.state.loginAlertHandler
+            showLoginAlert: ! this.state.showLoginAlert
         })
     }
 
     render(){
+        let renderContent =  null      
+
         if(this.props.login === true){
-            return(
+            renderContent = (
                 <Link to={this.props.link} className={classes.addNew}>
                     <img src={add} alt='add' /> 
                 </Link>
             )
         }else{
-            return(
+            renderContent = (
                 <div className={classes.addNew}>
                     <img onClick={this.loginAlertHandler} src={add} alt='add' />
                     {this.state.showLoginAlert?
-                        <AlertBox alertContent='发布帖子请先登陆' nextStep='确定' onClick={this.loginAlertHandler} />:
-                        {}}            
+                        <AlertBox alertContent='发布帖子请先登陆' 
+                            nextStep='确定' 
+                            onClick={this.loginAlertHandler} 
+                            goBackTo=''/>
+                        :null}       
                 </div>
             )
         }
+
+        return(
+            <div>
+                {renderContent}
+            </div>
+        )
     }
 } 
 
