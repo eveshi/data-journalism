@@ -86,20 +86,20 @@ class LessonDetails extends Component {
         this.setState({
             commentSubmitted: true
         })
-        const request = await this.sendComment(comment, this.state.id, this.props.userData.email)
+        const request = await this.sendComment(comment, this.state.id)
     }
 
-    sendComment = async(comment, id, email) => {
+    sendComment = async(comment, id) => {
         const request = await axios.post('/api/sendLessonComment', {
             comment:comment,
             id: id,
-            email: email
         })
     }
 
     like = async() => {
         let numbersOfLiked = this.state.content[0].liked
         let content = this.state.content
+        let increaseFlag = null
         if(this.state.currentLikedState === false){
             numbersOfLiked = parseInt(numbersOfLiked,10) + 1
             content[0].liked = numbersOfLiked
@@ -107,6 +107,7 @@ class LessonDetails extends Component {
                 content: content,
                 currentLikedState: ! this.state.currentLikedState
             })
+            increaseFlag = true
             console.log(numbersOfLiked)
         }else if(this.state.currentLikedState === true){
             numbersOfLiked = parseInt(numbersOfLiked,10) - 1
@@ -115,14 +116,16 @@ class LessonDetails extends Component {
                 content: content,
                 currentLikedState: ! this.state.currentLikedState
             })
+            increaseFlag = false
             console.log(numbersOfLiked)
         }
-        const request = await this.updateLikeAndStar(numbersOfLiked, 'noChange')
+        const request = await this.updateLikeAndStar(numbersOfLiked, 'noChange', increaseFlag)
     }
 
     star = async() => {
         let numbersOfStared = this.state.content[0].stared
         let content = this.state.content
+        let increaseFlag = null
         if(this.state.currentStaredState === false){
             numbersOfStared = parseInt(numbersOfStared, 10) + 1
             content[0].stared = numbersOfStared
@@ -130,6 +133,7 @@ class LessonDetails extends Component {
                 content: content,
                 currentStaredState: !this.state.currentStaredState
             })
+            increaseFlag = true
         }else if(this.state.currentStaredState === true){
             numbersOfStared = parseInt(numbersOfStared, 10) - 1
             content[0].stared = numbersOfStared
@@ -137,17 +141,26 @@ class LessonDetails extends Component {
                 content: content,
                 currentStaredState: !this.state.currentStaredState
             })
+            increaseFlag = false
         }
-        const request = await this.updateLikeAndStar('noChange', numbersOfStared)
+        const request = await this.updateLikeAndStar('noChange', numbersOfStared, increaseFlag)
     }
 
-    updateLikeAndStar = async(numbersOfLiked, numbersOfStared) => {
+    updateLikeAndStar = async(numbersOfLiked, numbersOfStared, increaseFlag) => {
         console.log('send now')
+        let userEmail = null
+        if(this.props.login === true){
+            userEmail = this.props.userData.email
+        }else{
+            userEmail = 'do not login'
+        }
         const request = await axios.get('/api/updateLikeAndStar', {
             params:{
                 liked: numbersOfLiked,
                 stared: numbersOfStared,
-                id: this.state.id,}
+                id: this.state.id,
+                userEmail: userEmail,
+                increaseFlag: increaseFlag}
         })
         console.log(request)
     }
@@ -192,7 +205,7 @@ class LessonDetails extends Component {
                     )
                 })}
                 {this.props.login?
-                    <div>
+                    <div className={classes.commentBox}>
                         <InputComment 
                             inputType={this.state.comment.inputType}
                             placeholder={this.state.comment.placeholder}

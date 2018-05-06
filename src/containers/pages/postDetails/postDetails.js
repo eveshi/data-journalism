@@ -76,7 +76,7 @@ class PostDetails extends Component {
         await axios.post('api/sendPostComment',{
             id: id,
             comment: commentWillSent,
-            email: this.props.userData.email
+            userEmail: this.props.userData.email
         })
     }
 
@@ -98,7 +98,7 @@ class PostDetails extends Component {
                         content={content} />
                 })}
                 {this.props.login?
-                    <div>
+                    <div className={classes.commentBox}>
                         <InputPost
                             inputType={comment.inputType}
                             placeholder={comment.placeholder}

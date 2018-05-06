@@ -4,6 +4,10 @@
     align-items: center;
 }
 
+.commentBox{
+    width: 100%;
+}
+
 .addComment{
     border: 1px solid grey;
     width: 100px;

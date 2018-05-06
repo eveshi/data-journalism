@@ -6,7 +6,6 @@
 @media(max-width:711px){
     .container16x9{
         position: relative;
-        left: 5%;
         width: 90%;
         padding-bottom: 50.625%;
     }

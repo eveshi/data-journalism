@@ -18,24 +18,36 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/api/sendPost', (req, res) => {
+    const post = req.body.mainContent
+    const userEmail = req.body.userEmail
+    console.log(userEmail)
     MongoClient.connect(mongoUrl, async(err, client) => {
         if(err){
             console.log(err.stack)
         }
         const db = client.db('data-jour');
-        const addPost = await db.collection('posts').insertOne(req.body);
+        const addPost = await db.collection('posts').insertOne(post);
         assert.equal(1, addPost.insertedCount);
+        console.log(addPost.ops[0]._id)
+        const changeUserData = db.collection('user').update(
+            {email: userEmail},
+            {
+                $push: {'post': addPost.ops[0]._id}
+            },
+            {upsert: true}
+        )
         client.close()
     })
 });
 
 app.post('/api/sendLesson',(req,res) => {
+    const lesson = req.body.lesson
     MongoClient.connect(mongoUrl, async(err,client) => {
         if(err){
             console.log(err.stack)
         }
         const db = client.db('data-jour');
-        const addLesson = await db.collection('lessons').insertOne(req.body);
+        const addLesson = await db.collection('lessons').insertOne(lesson);
         assert.equal(1,addLesson.insertedCount)
         client.close()
     })
@@ -56,16 +68,7 @@ app.get('/api/getPost', (req, res) => {
 
         client.close()
 
-        let postContentArray = []
-        postQuery.map((el) => {
-            const id = el._id
-            const newObject = {
-                id: id, 
-                ...el.mainContent
-            }
-            postContentArray.push(newObject)
-        })
-        const postSentBack = postsSorted(postContentArray)
+        const postSentBack = postsSorted(postQuery)
         const dataSentBack = {
             postSentBack,
             totalNumber: totalNumber
@@ -84,11 +87,13 @@ app.get('/api/postDetails',(req, res) => {
         const postsDetails = await db.collection('posts').findOne({_id: MongoID(id)})
         client.close()
 
-        let objectArray = []
-        Object.keys(postsDetails).forEach((key) => {
-            objectArray.push(postsDetails[key])
-            if(postsDetails[key].comment){
-                objectArray = [...objectArray, ...postsDetails[key].comment]
+        let objectArray = []        
+        Object.keys(postsDetails).map((key) => {
+            let item = {[key]: postsDetails[key]}
+            if(key !== 'comment'){
+                objectArray[0] = {...objectArray[0], ...item}
+            }else{
+                objectArray = [...objectArray, ...postsDetails.comment]
             }
         })
         const postContent = postsSorted(objectArray,true)
@@ -100,6 +105,7 @@ app.get('/api/postDetails',(req, res) => {
 app.post('/api/sendPostComment', (req,res) => {
     const id = req.body.id
     const comment = req.body.comment
+    const userEmail = req.body.userEmail
     MongoClient.connect(mongoUrl, async(err, client) => {
         if(err){
             console.log(err.stack)
@@ -109,7 +115,15 @@ app.post('/api/sendPostComment', (req,res) => {
         const sendComment = await db.collection('posts').update(
             {_id: MongoID(id)},
             {
-                $push:{"mainContent.comment": comment}
+                $push:{"comment": comment}
+            },
+            {upsert: true}
+        )
+
+        const changeUserData = await db.collection('user').update(
+            {email: userEmail},
+            {
+                $push:{"comment": id}
             },
             {upsert: true}
         )
@@ -130,17 +144,7 @@ app.get('/api/getLesson',(req,res) => {
         const lessonQuery = await db.collection('lessons').find().sort({_id:-1}).skip(skip).limit(5).toArray()
         client.close()
 
-        let lessonsUnsorted = []
-        lessonQuery.map((el) => {
-            let lesson = el.lesson
-            let id = el._id
-            lesson = {
-                id: id,
-                ...lesson
-            }
-            lessonsUnsorted.push(lesson)
-        })
-        const lessonsQuerySorted = postsSorted(lessonsUnsorted)
+        const lessonsQuerySorted = postsSorted(lessonQuery)
 
         res.send(lessonsQuerySorted)
     })
@@ -157,15 +161,17 @@ app.get('/api/getLessonDetails',(req,res) => {
         const db = client.db('data-jour')
         const lessonDetails = await db.collection('lessons').findOne({_id:MongoID(id)})
         client.close()
-        let lessonDetailsToArray = []
-        Object.keys(lessonDetails).forEach((key) => {
-            lessonDetailsToArray.push(lessonDetails[key])
-            if(lessonDetails[key].comment){
-                lessonDetailsToArray = [...lessonDetailsToArray, ...lessonDetails[key].comment]
+        
+        let lessonDetailsToArray = []        
+        Object.keys(lessonDetails).map((key) => {
+            let item = {[key]: lessonDetails[key]}
+            if(key !== 'comment'){
+                lessonDetailsToArray[0] = {...lessonDetailsToArray[0], ...item}
+            }else{
+                lessonDetailsToArray= [...lessonDetailsToArray, ...lessonDetails.comment]
             }
         })
-
-        const lessonRecieved = postsSorted(lessonDetailsToArray,true)
+        const lessonRecieved= postsSorted(lessonDetailsToArray,true)
 
         res.send(lessonRecieved)
     })
@@ -183,7 +189,7 @@ app.post('/api/sendLessonComment', (req,res) => {
         const sendLessonComment = db.collection('lessons').update(
             {_id:MongoID(id)},
             {
-                $push: {'lesson.comment':comment}
+                $push: {'comment':comment}
             },
             {upsert: true}
         )
@@ -195,6 +201,8 @@ app.get('/api/updateLikeAndStar', (req,res) => {
     const liked = req.query.liked
     const stared = req.query.stared
     const id = req.query.id
+    const userEmail = req.query.userEmail
+    const increaseFlag = req.query.increaseFlag
     MongoClient.connect(mongoUrl, (err,client) => {
         if(err){
             console.log(err.stack)
@@ -205,16 +213,54 @@ app.get('/api/updateLikeAndStar', (req,res) => {
             const updateLikeAndStar = db.collection('lessons').update(
                 {_id: MongoID(id)},
                 {
-                    $set:{'lesson.liked': liked}
+                    $set:{'liked': liked}
                 }
             )
+            if(userEmail !== 'do not login'){
+                if(increaseFlag === 'true'){
+                    let changeUserLike = db.collection('user').update(
+                        {email: userEmail},
+                        {
+                            $push:{'liked': id}
+                        },
+                        {upsert: true}
+                    )
+                }else if(increaseFlag === 'false'){
+                    let changeUserLike = db.collection('user').update(
+                        {email: userEmail},
+                        {
+                            $pull:{'liked': id}
+                        },
+                        {upsert: true}
+                    )
+                }
+            }
         }else if(stared !== 'noChange'){
             const updateLikeAndStar = db.collection('lessons').update(
                 {_id: MongoID(id)},
                 {
-                    $set:{'lesson.stared': stared}
+                    $set:{'stared': stared}
                 }
             )
+            if(userEmail !== 'do not login'){
+                if(increaseFlag === 'true'){
+                    let changeUserStar = db.collection('user').update(
+                        {email: userEmail},
+                        {
+                            $push:{'stared': id}
+                        },
+                        {upsert: true}
+                    )
+                }else if(increaseFlag === 'false'){
+                    let changeUserStar = db.collection('user').update(
+                        {email: userEmail},
+                        {
+                            $pull:{'stared': id}
+                        },
+                        {upsert: true}
+                    )
+                }
+            }
         }
         client.close()
     })
@@ -222,12 +268,12 @@ app.get('/api/updateLikeAndStar', (req,res) => {
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
-const postsSorted = (postsUnsorted, forDetailPage) => {
+const postsSorted = (postsUnsorted, ifForDetailPage) => {
     let postsSorted = []
     postsUnsorted.map((el,index) => {
         let time = null
         if(el.user){
-            if(forDetailPage){
+            if(ifForDetailPage){
                 const timestamp = parseInt(el.time)
                 time = new Date(timestamp).toLocaleDateString() + " " + new Date(timestamp).toLocaleTimeString()
             }else{
@@ -262,7 +308,7 @@ const postsSorted = (postsUnsorted, forDetailPage) => {
             postElement = {
                 ...postElement,
                 key: el.title+el.time+el.user,
-                id: el.id,
+                id: el._id,
                 time: time,
             }
 
