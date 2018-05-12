@@ -195,7 +195,7 @@ class NewLesson extends Component{
                         inputType={this.state.titlePic.inputType}
                         placeholder={this.state.titlePic.placeholder}
                         value={this.state.titlePic.value}
-                        hide={this.state.titlePic.hide}
+                        style={this.state.titlePic.hide?{display:'none'}:{}}
                         change={(event) => this.changeHandler(event,this.state.titlePic.name)}
                         maxlength='100' />
                     <Button 
@@ -207,7 +207,7 @@ class NewLesson extends Component{
                         inputType={this.state.titleVideo.inputType}
                         placeholder={this.state.titleVideo.placeholder}
                         value={this.state.titleVideo.value}
-                        hide={this.state.titleVideo.hide}
+                        style={this.state.titleVideo.hide?{display:'none'}:{}}
                         change={(event) => this.changeHandler(event,this.state.titleVideo.name)}
                         maxlength='100' />
                     <Button 

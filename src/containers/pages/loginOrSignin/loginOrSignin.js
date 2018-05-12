@@ -4,6 +4,7 @@ import axios from '../../../axios_data';
 
 import Input from '../../../components/inputPost/inputPost'
 import Button from '../../../components/button/button'
+import AlertBox from '../.././../components/alertBox/alertBox'
 import * as actions from '../../../store/action/index'
 import classes from './loginOrSignin.css'
 
@@ -15,7 +16,7 @@ class LoginOrSignin extends Component {
                 value: '',
                 placeholder: '注册邮箱……',
                 name: '邮箱',
-                type: null
+                type: null,
             },
             password: {
                 inputType: 'text',
@@ -31,6 +32,8 @@ class LoginOrSignin extends Component {
                 placeholder: '请输入用户名……',
                 name: '用户名',
                 type: null,
+                isUpToStandard: null,
+                alert: '长度在三到八个字符之间',
             },
             email: {
                 inputType: 'text',
@@ -38,6 +41,8 @@ class LoginOrSignin extends Component {
                 placeholder: '请输入注册邮箱……',
                 name: '邮箱',
                 type: null,
+                isUpToStandard: null,
+                alert: '邮箱格式不对',
             },
             password: {
                 inputType: 'text',
@@ -45,6 +50,8 @@ class LoginOrSignin extends Component {
                 placeholder: '请输入密码……',
                 name: '密码',
                 type: 'password',
+                isUpToStandard: null,
+                alert: '需在八个字符之上，且至少有一个数字和英文字符',
             },
             passwordRepeated: {
                 inputType: 'text',
@@ -52,6 +59,8 @@ class LoginOrSignin extends Component {
                 placeholder: '请再次输入密码……',
                 name: '确认密码',
                 type: 'password',
+                isUpToStandard: null,
+                alert: '两次密码输入不一致',
             },
             profilePic: {
                 inputType: null,
@@ -73,22 +82,120 @@ class LoginOrSignin extends Component {
                 inputType: null,
                 value: 'basic',
             }
-        }
+        },
+        loginFail: null,
+        signinFail: null,
+        signinSuccess: null,
     }
 
     changeHandler = (event, dataSource, key) => {
         const value = event.target.value
         switch(dataSource){
             case 'signinData':
-                this.setState({
-                    signinData: {
-                        ...this.state.signinData,
-                        [key]:{
-                            ...this.state.signinData[key],
-                            value: value
+                switch(key){
+                    case 'name':
+                        const nameReg = /\w{3,8}/;
+                        if(nameReg.test(value) === false){
+                            this.setState({
+                                signinData: {
+                                    ...this.state.signinData,
+                                    name:{
+                                        ...this.state.signinData.name,
+                                        isUpToStandard: false,
+                                        value: value
+                                    }
+                                }
+                            })
+                        }else{
+                            this.setState({
+                                signinData: {
+                                    ...this.state.signinData,
+                                    name:{
+                                        ...this.state.signinData.name,
+                                        isUpToStandard: true,
+                                        value: value
+                                    }
+                                }
+                        })};
+                        break;
+                    case 'email':
+                        const emailReg = /.*@\w*[.]\w*/;
+                        if(emailReg.test(value) === false){
+                            this.setState({
+                                signinData: {
+                                    ...this.state.signinData,
+                                    email:{
+                                        ...this.state.signinData.email,
+                                        isUpToStandard: false,
+                                        value: value
+                                    }}
+                                })
+                        }else{
+                            this.setState({
+                                signinData: {
+                                    ...this.state.signinData,
+                                    email:{
+                                        ...this.state.signinData.email,
+                                        isUpToStandard: true,
+                                        value: value
+                                    }
+                                }})
                         }
-                    }
-                });
+                        break;
+                    case 'password':
+                        const passwordReg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+                        if(passwordReg.test(value) === false){
+                            this.setState({
+                                signinData: {
+                                    ...this.state.signinData,
+                                    password:{
+                                        ...this.state.signinData.password,
+                                        isUpToStandard: false,
+                                        value: value
+                                    }
+                                }
+                            })
+                        }else{
+                            this.setState({
+                                signinData: {
+                                    ...this.state.signinData,
+                                    password:{
+                                        ...this.state.signinData.password,
+                                        isUpToStandard: true,
+                                        value: value
+                                    }
+                                }
+                            })
+                        }
+                        break;
+                    case 'passwordRepeated':
+                        if(value !== this.state.signinData.password.value){
+                            this.setState({
+                                signinData: {
+                                    ...this.state.signinData,
+                                    passwordRepeated:{
+                                        ...this.state.signinData.passwordRepeated,
+                                        isUpToStandard: false,
+                                        value: value
+                                    }
+                                }
+                            })
+                        }else if(value === this.state.signinData.password.value){
+                            this.setState({
+                                signinData: {
+                                    ...this.state.signinData,
+                                    passwordRepeated:{
+                                        ...this.state.signinData.passwordRepeated,
+                                        isUpToStandard: true,
+                                        value: value
+                                    }
+                                }
+                            })
+                        };
+                        break;
+                    default:
+                        break;
+                }
                 break;
             case 'loginData':
                 this.setState({
@@ -112,7 +219,6 @@ class LoginOrSignin extends Component {
         Object.assign(signinData, this.state.signinData)
         Object.keys(signinData).map((key) => {
             const item = {[key]: signinData[key].value}
-            console.log(item)
             newUser={...newUser, ...item}
         })
         axios.post('/api/signin', {
@@ -120,12 +226,13 @@ class LoginOrSignin extends Component {
         }).then((response) => {
             const message = response.data
             if(message === 'The email has been registered'){
-                console.log(message)
-                alert('该邮箱已注册')
+                this.setState({
+                    signinFail: true
+                })
             }else if(message === 'Successfully Registered'){
-                console.log(message)
-                alert('注册成功')
-                window.history.back()
+                this.setState({
+                    signinSuccess: true
+                })
             }
         })
     }
@@ -143,9 +250,13 @@ class LoginOrSignin extends Component {
         }).then((response) => {
             const message = response.data
             if(message === 'wrong password'){
-                alert('密码错误')
+                this.setState({
+                    loginFail: true
+                })
             }else if(message === 'invalid email'){
-                alert('邮箱不存在')
+                this.setState({
+                    loginFail: true
+                })
             }else{
                 this.props.loginSuccessfully(message)
                 window.history.back()
@@ -153,20 +264,43 @@ class LoginOrSignin extends Component {
         })
     }
 
+    loginFailComfirm = () => {
+        this.setState({
+            loginFail: false
+        })
+    }
+
+    signinFailComfirm = () => {
+        this.setState({
+            signinFail: false
+        })
+    }
+
+    signinSuccessComfirm = () => {
+        window.history.back()
+    }
+
     render(){
         const signinForms = Object.keys(this.state.signinData).map((key) => {
             return (
-                <div key={key} className={classes.singleItem}
-                style={this.state.signinData[key].inputType?{}:{display:'none', height:'0px'}}>
-                    <p>
-                        {this.state.signinData[key].name}:
-                    </p>
-                    <Input
-                    inputType = {this.state.signinData[key].inputType}
-                    placeholder = {this.state.signinData[key].placeholder}
-                    value={this.state.signinData[key].value}
-                    change={(event) => this.changeHandler(event, 'signinData', key)}
-                    type={this.state.signinData[key].type} />
+                <div key={key}>
+                    <div className={classes.singleItem}
+                    style={this.state.signinData[key].inputType?{}:{display:'none', height:'0px'}}>
+                        <p>
+                            {this.state.signinData[key].name}:
+                        </p>
+                        <Input
+                        inputType = {this.state.signinData[key].inputType}
+                        placeholder = {this.state.signinData[key].placeholder}
+                        value={this.state.signinData[key].value}
+                        change={(event) => this.changeHandler(event, 'signinData', key)}
+                        type={this.state.signinData[key].type}
+                        style={this.state.signinData[key].isUpToStandard===false?
+                            {borderBottom:'2px solid red',color:'red'}:{}} />
+                    </div>
+                    {this.state.signinData[key].isUpToStandard===false?
+                        <p className={classes.signinAlert}>{this.state.signinData[key].alert}</p>:
+                        null} 
                 </div>)
         })
 
@@ -183,6 +317,15 @@ class LoginOrSignin extends Component {
                 </div>)
         })
 
+        let canUserSubmit = 'disabled'
+
+        if(this.state.signinData.name.isUpToStandard &&
+            this.state.signinData.email.isUpToStandard &&
+            this.state.signinData.password.isUpToStandard &&
+            this.state.signinData.passwordRepeated.isUpToStandard){
+                canUserSubmit = null
+            }
+
         return(
             <div className={classes.pageDesign}>
                 <div className={classes.signin}>
@@ -190,7 +333,10 @@ class LoginOrSignin extends Component {
                     <form>
                         {signinForms}
                     </form>
-                    <Button name='注册数据新闻网' onClick={this.signinSubmitHandler} />
+                    <Button name='注册数据新闻网' onClick={this.signinSubmitHandler} 
+                        disabled={canUserSubmit}
+                        style={canUserSubmit==='disabled'?
+                            {backgroundColor:'beige', color:'#bdbcbc'}:null}/>
                     <a href='#login'>已有账户，现在登录</a>
                 </div>
                 <div id='login' className={classes.login}>
@@ -200,6 +346,21 @@ class LoginOrSignin extends Component {
                     </form>
                     <Button name='登录数据新闻网' onClick={this.loginSubmitHandler} />
                 </div>
+                {this.state.loginFail === true?
+                    <AlertBox alertContent='邮箱或密码错误，请重试' 
+                        nextStep='确定'
+                        goBackTo=''
+                        onClick={this.loginFailComfirm} />:null}
+                {this.state.signinFail === true?
+                    <AlertBox alertContent= '邮箱已占用，请重试' 
+                        nextStep='确定'
+                        goBackTo=''
+                        onClick={this.signinFailComfirm} />:null}
+                {this.state.signinSuccess === true?
+                    <AlertBox alertContent='注册成功，返回上一界面' 
+                        nextStep='确定'
+                        goBackTo=''
+                        onClick={this.signinSuccessComfirm} />:null}               
             </div>
         )
     }

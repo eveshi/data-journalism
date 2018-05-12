@@ -12,7 +12,7 @@ const inputValue = (props) => {
                 placeholder={props.placeholder}
                 value={props.value}
                 onChange={props.change}
-                style={props.hide?{display:'none'}:{}}
+                style={props.style}
                 maxLength={props.maxlength?props.maxlength:'20'}
                 type={props.type} />;
             break;

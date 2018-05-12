@@ -82,3 +82,12 @@
     font-size: 13px;
     margin-top: 20px;
 }
+
+.signinAlert{
+    font-size: 12px;
+    margin: 0px;
+    text-align: right;
+    width: 90%;
+    color: red;
+    font-weight: bolder;
+}
