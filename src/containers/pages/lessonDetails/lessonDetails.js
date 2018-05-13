@@ -1,6 +1,7 @@
 import React,{ Component } from 'react';
 import { connect } from 'react-redux';
 import axios from '../../../axios_data';
+import * as actions from '../../../store/action/index'
 import SingleContent from '../../../components/singleContent/singleContent';
 import InputComment from '../../../components/inputPost/inputPost';
 import Button from '../../../components/button/button';
@@ -32,6 +33,22 @@ class LessonDetails extends Component {
     componentWillMount(){
         const paramsGet = this.props.location.search
         const id = new URLSearchParams(paramsGet).get('id')
+        let currentLikedState = false
+        let currentStaredState = false
+        if(this.props.login === true){
+            const ifLiked = this.props.userData.liked.find((likedId) => {
+               return likedId === id
+            })
+            const ifStared = this.props.userData.stared.find((staredId) => {
+                return staredId === id
+            })
+            if(ifLiked !== undefined){
+                currentLikedState = true
+            }
+            if(ifStared !== undefined){
+                currentStaredState = true
+            }
+        }
         this.getDetails(id).then((content)=>{
             console.log(content)
             let videoUrl = null
@@ -42,7 +59,9 @@ class LessonDetails extends Component {
                 content: content,
                 id: id,
                 videoUrl: videoUrl,
-                picUrl: content[0].titlePic
+                picUrl: content[0].titlePic,
+                currentLikedState: currentLikedState,
+                currentStaredState: currentStaredState
             })
         })
     }
@@ -154,7 +173,7 @@ class LessonDetails extends Component {
         }else{
             userEmail = 'do not login'
         }
-        const request = await axios.get('/api/updateLikeAndStar', {
+        const response = await axios.get('/api/updateLikeAndStar', {
             params:{
                 liked: numbersOfLiked,
                 stared: numbersOfStared,
@@ -162,7 +181,8 @@ class LessonDetails extends Component {
                 userEmail: userEmail,
                 increaseFlag: increaseFlag}
         })
-        console.log(request)
+        const userData = response.data
+        this.props.loginSuccessfully(userData)
     }
 
     render(){
@@ -237,4 +257,10 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(LessonDetails);
+const mapActionsToProps = dispatch => {
+    return{
+        loginSuccessfully: (userData) => dispatch(actions.loginSuccessfully(userData))
+    }
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(LessonDetails);

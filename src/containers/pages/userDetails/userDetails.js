@@ -1,6 +1,7 @@
 import React,{ Component } from 'react'
 import { connect } from 'react-redux'
 import axios from '../../../axios_data'
+import * as actions from '../../../store/action/index'
 
 import UserProfile from '../../../components/profilePic/profilePic'
 import Button from '../../../components/button/button'
@@ -56,9 +57,9 @@ class UserDetails extends Component {
         },
         profilePic: null,
         save: false,
-        notSave: false,
         numberOfStared: null,
         numberOfLiked: null,
+        numberOfPost: null,
         showStared: null,
         showLiked: null,
         userLiked:[],
@@ -66,23 +67,32 @@ class UserDetails extends Component {
     }
 
     componentWillMount(){
-        this.getLikedAndStared.then((response) => {
-            this.setState({
-                profilePic: this.props.userData.profilePic,
-                numberOfLiked: this.props.userData.liked.length,
-                numberOfStared: this.props.userData.stared.length,
-                userLiked: response.liked,
-                userStared: response.stared
-            })
-        })
+        let numberOfLiked = 0
+        let numberOfStared = 0
+        let numberOfPost = 0
+        if(this.props.login === true){
+            numberOfLiked = this.props.userData.liked.length
+            numberOfStared = this.props.userData.stared.length
+            numberOfPost = this.props.userData.post.length
+            this.getLikeStaredPost(numberOfLiked, numberOfStared, numberOfPost)
+        }
     }
 
-    getLikedAndStared = () => {
-        axios.post({
+    getLikeStaredPost = async(numberOfLiked, numberOfStared, numberOfPost) => {
+        await axios.post('/api/getUserLikeStaredPost', {
             userLiked: this.props.userData.liked,
-            userStared: this.props.userData.stared
-        },(response)=>{
-            return response.data
+            userStared: this.props.userData.stared,
+            userPost: this.props.userData.post,
+        }).then((response)=>{
+            const data = response.data
+            this.setState({
+                profilePic: this.props.userData.profilePic,
+                numberOfLiked: numberOfLiked,
+                numberOfStared: numberOfStared,
+                numberOfPost: numberOfPost,
+                userLiked: data.userLikedDetails,
+                userStared: data.userStaredDetails
+            })
         })
     }
 
@@ -206,23 +216,19 @@ class UserDetails extends Component {
     }
 
     submitAllChanges = (profilePic, name, password) => {
+        console.log('aubmit')
         axios.post('/api/changeUserData', {
             profilePic: profilePic,
             name: name,
             password: password,
             email: this.props.userData.email
         }).then((response) => {
-            const message = response.data
-            if(message === 'success'){
-                this.setState({
-                    save: true
-                })
-            }else{
-                this.setState({
-                    notSave: true
-                })
-
-            }
+            const userData = response.data
+            console.log(userData)
+            this.props.loginSuccessfully(userData)
+            this.setState({
+                save: true
+            })
         })
     }
 
@@ -258,7 +264,6 @@ class UserDetails extends Component {
                 },
             },
             save: false,
-            notSave: false,
         })
     }
 
@@ -325,11 +330,11 @@ class UserDetails extends Component {
                 canUserSubmit = null
             }
 
-        const likedForm = this.state.userLiked.map((key) => {
+        const likedForm = this.state.userLiked.map((item) => {
 
         })
 
-        const staredForm = this.state.userStared.map((key) => {
+        const staredForm = this.state.userStared.map((item) => {
 
         })
 
@@ -360,16 +365,18 @@ class UserDetails extends Component {
                             <form>
                                 {changeUserDataForm}
                             </form>
-                            <Button name='更新数据' onClick={this.signinSubmitHandler} 
+                            <Button name='更新数据' onClick={this.submitUserDataChange} 
                                 disabled={canUserSubmit}
                                 style={canUserSubmit==='disabled'?
                                     {backgroundColor:'beige', color:'#bdbcbc'}:null}/>
                         </div>:null}
                 </div>
-                <div>
-                    <Button name={'收藏'+this.state.numberOfStared}
+                <div className={classes.likedStaredPost}>
+                    <Button name={'发布     '+this.state.numberOfPost}
                         onClick={this.showStaredHandler}></Button>
-                    <Button name={'赞'+this.state.numberOfLiked}
+                    <Button name={'收藏     '+this.state.numberOfStared}
+                        onClick={this.showStaredHandler}></Button>
+                    <Button name={'赞    '+this.state.numberOfLiked}
                         onClick={this.showLikedHandler}></Button>
                 </div>
                 {this.state.showStared?
@@ -385,11 +392,6 @@ class UserDetails extends Component {
                         nextStep='确定'
                         goBackTo=''
                         onClick={this.saveComfirm} />:null}
-                {this.state.notSave?
-                    <AlertBox alertContent='修改失败，请重试' 
-                        nextStep='确定'
-                        goBackTo=''
-                        onClick={this.saveComfirm} />:null}
             </div>
         )
     }
@@ -397,8 +399,15 @@ class UserDetails extends Component {
 
 const mapStateToProps = state => {
     return {
+        login: state.login,
         userData: state.userData
     }
 }
 
-export default connect(mapStateToProps)(UserDetails)
+const mapActionsToProps = dispatch => {
+    return {
+        loginSuccessfully: (userData) => dispatch(actions.loginSuccessfully(userData))
+    }
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(UserDetails)

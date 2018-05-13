@@ -28,7 +28,6 @@ app.post('/api/sendPost', (req, res) => {
         const db = client.db('data-jour');
         const addPost = await db.collection('posts').insertOne(post);
         assert.equal(1, addPost.insertedCount);
-        console.log(addPost.ops[0]._id)
         const changeUserData = db.collection('user').update(
             {email: userEmail},
             {
@@ -203,14 +202,14 @@ app.get('/api/updateLikeAndStar', (req,res) => {
     const id = req.query.id
     const userEmail = req.query.userEmail
     const increaseFlag = req.query.increaseFlag
-    MongoClient.connect(mongoUrl, (err,client) => {
+    MongoClient.connect(mongoUrl, async(err,client) => {
         if(err){
             console.log(err.stack)
         }
 
         const db = client.db('data-jour')
         if(liked !== 'noChange'){
-            const updateLikeAndStar = db.collection('lessons').update(
+            const updateLikeAndStar = await db.collection('lessons').update(
                 {_id: MongoID(id)},
                 {
                     $set:{'liked': liked}
@@ -218,7 +217,7 @@ app.get('/api/updateLikeAndStar', (req,res) => {
             )
             if(userEmail !== 'do not login'){
                 if(increaseFlag === 'true'){
-                    let changeUserLike = db.collection('user').update(
+                    let changeUserLike = await db.collection('user').update(
                         {email: userEmail},
                         {
                             $push:{'liked': id}
@@ -226,17 +225,16 @@ app.get('/api/updateLikeAndStar', (req,res) => {
                         {upsert: true}
                     )
                 }else if(increaseFlag === 'false'){
-                    let changeUserLike = db.collection('user').update(
+                    let changeUserLike = await db.collection('user').update(
                         {email: userEmail},
                         {
                             $pull:{'liked': id}
                         },
-                        {upsert: true}
                     )
                 }
             }
         }else if(stared !== 'noChange'){
-            const updateLikeAndStar = db.collection('lessons').update(
+            const updateLikeAndStar = await db.collection('lessons').update(
                 {_id: MongoID(id)},
                 {
                     $set:{'stared': stared}
@@ -244,7 +242,7 @@ app.get('/api/updateLikeAndStar', (req,res) => {
             )
             if(userEmail !== 'do not login'){
                 if(increaseFlag === 'true'){
-                    let changeUserStar = db.collection('user').update(
+                    let changeUserStar = await db.collection('user').update(
                         {email: userEmail},
                         {
                             $push:{'stared': id}
@@ -252,17 +250,24 @@ app.get('/api/updateLikeAndStar', (req,res) => {
                         {upsert: true}
                     )
                 }else if(increaseFlag === 'false'){
-                    let changeUserStar = db.collection('user').update(
+                    let changeUserStar = await db.collection('user').update(
                         {email: userEmail},
                         {
                             $pull:{'stared': id}
                         },
-                        {upsert: true}
                     )
                 }
             }
         }
+        
+        const userData = await db.collection('user').findOne({
+            email: userEmail
+        })
+        console.log(userData)
+
         client.close()
+
+        res.send(userData)
     })
 })
 
@@ -360,39 +365,108 @@ app.post('/api/login', (req,res) => {
     })
 })
 
+app.post('/api/getUserLikeStaredPost', (req,res) => {
+    const userLiked = req.body.userLiked
+    const userStared = req.body.userStared
+    const userPost = req.body.userPost
+    let newUserLikedArray = null
+    let newUserStaredArray = null
+    let newUserPostArray = null
+    if(userLiked !== '' && userLiked !== undefined){
+        newUserLikedArray = []
+        userLiked.map((item) => {
+            console.log(item)
+            newUserLikedArray.push(MongoID(item))
+        })
+    }
+    if(userStared !== '' && userStared !== undefined){
+        newUserStaredArray = []
+        userStared.map((item) => {
+            newUserStaredArray.push(MongoID(item))
+        })
+    }
+    if(userPost !== '' && userPost !== undefined){
+        newUserPostArray = []
+        userPost.map((item) => {
+            newUserPostArray.push(MongoID(item))
+        })
+    }
+    MongoClient.connect(mongoUrl, async(err,client) =>{
+        if(err){
+            console.log(err.stack)
+        }
+
+        let userLikedDetails = []
+        let userStaredDetails = []
+        let userPostDetails = []
+        const db = client.db('data-jour')
+        if(newUserLikedArray !== null){
+            userLikedDetails = await db.collection('lessons').find({
+                _id: {
+                    $in: newUserLikedArray
+                }
+            }).toArray()
+        }
+        if(newUserStaredArray !== null){
+            userStaredDetails = await db.collection('lessons').find({
+                _id:{
+                    $in: newUserStaredArray
+                }
+            }).toArray()
+        }
+        if(newUserPostArray !== null){
+            userPostDetails = await db.collection('posts').find({
+                _id:{
+                    $in: newUserPostArray
+                }
+            }).toArray()
+        }
+        client.close()
+
+        console.log(userLikedDetails)
+        console.log(userStaredDetails)
+
+        const sendBackObject = {
+            userLikedDetails: userLikedDetails,
+            userStaredDetails: userStaredDetails,
+            userPostDetails: userPostDetails
+        }
+
+        res.send(sendBackObject)
+        
+    })
+})
+
 app.post('/api/changeUserData', (req,res) => {
     const profilePic = req.body.profilePic
     const name = req.body.name
     const password = req.body.password
     const email = req.body.email
-    console.log(profilePic)
-    console.log(name)
-    console.log(password)
-    if(profilePic !== null && ''){
-        mongooseModel.findOneAndUpdate({email:email},{profilePic: profilePic},{new:true}, (err) => {
+    if(profilePic !== undefined && profilePic !== ''){
+        mongooseModel.findOneAndUpdate({email:email},{profilePic: profilePic},{new:true}, (err,user) => {
             if(err){
                 console.log(err.stack)
                 res.send('fail')
             }
-        })
-        res.send('success')
+            res.send(user)
+        }) 
     }
-    if(name !== null && ''){
-        mongooseModel.findOneAndUpdate({email:email},{name:name},{new:true},(err) => {
+    if(name !== undefined && name !== ''){
+        mongooseModel.findOneAndUpdate({email:email},{name:name},{new:true},(err,user) => {
             if(err){
                 console.log(err.stack)
                 res.send('fail')
             }
+            res.send(user)
         })
-        res.send('success')
     }
-    if(password !== null && ''){
-        mongooseModel.findOneAndUpdate({email:email},{password:password},{new:true},(err) => {
+    if(password !== undefined && password !== ''){
+        mongooseModel.findOneAndUpdate({email:email},{password:password},{new:true},(err,user) => {
             if(err){
                 console.log(err.stack)
                 res.send('fail')
             }
-            res.send('success')
+            res.send(user)
         })
     }
 })
