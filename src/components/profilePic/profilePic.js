@@ -44,7 +44,9 @@ const profilePic = (props) => {
 
     return(
         <Aux>
-            <img src={profileSrc} alt='profilePic' className={classes.profilePic} />
+            <img src={profileSrc} alt='profilePic' 
+                className={classes.profilePic}
+                onClick={props.onClick} />
         </Aux>
     )
 }

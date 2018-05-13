@@ -1,0 +1,88 @@
+.wholePage{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bigProfile img{
+    width: 40%;
+}
+
+.changeProfile img{
+    width: 40px;
+}
+
+.changeProfile button{
+    background-color: transparent;
+    border: none;
+    margin-top: 10px;
+}
+
+.userData{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.userData button{
+    height: 30px;
+    background-color: transparent;
+    border-radius: 5px;
+    box-shadow: 0.5px 1px 0.5px grey;
+    font-size: 14px;
+    margin-top: 20px;
+    color: darkolivegreen;
+    font-weight: lighter;
+    font-weight: bold;
+}
+
+.changeUserData{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.userName{
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.changeDataIcon{
+    width: 25px;
+    height: 25px;
+}
+
+.singleItem{
+    height: 40px;
+    width: 90%;
+    display: flex;
+    margin: auto;
+}
+
+.singleItem input{
+    margin: 10px;
+    height: 25px;
+    font-size: 14px;
+    border-bottom: 1.3px solid grey;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    width: 200px;
+    background-color: transparent;
+}
+
+.singleItem p{
+    width: 80px;
+    font-size: 13px;
+    margin-top: 20px;
+}
+
+.signinAlert{
+    font-size: 12px;
+    margin: 0px;
+    text-align: right;
+    width: 90%;
+    color: red;
+    font-weight: bolder;
+}
+

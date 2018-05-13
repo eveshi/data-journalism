@@ -12,7 +12,7 @@ class UserLog extends Component {
             <Aux>
                 <div className={classes.logout} 
                     style={this.props.login? {}:{display:'none'}}>
-                    <NavLink to={'/userdetails'}>
+                    <NavLink to={'/user/'+this.props.userData.name}>
                         <ProfilePic userProfile={this.props.userData.profilePic} />
                         <p>{this.props.userData.name}</p>
                     </NavLink>

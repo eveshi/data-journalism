@@ -1,13 +1,14 @@
 import React from 'react';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import Layouts from '../../hoc/layouts/layouts';
-import NewPost from '../pages/newPost/newPost';
-import Community from '../pages/community/community';
-import PostDetails from '../pages/postDetails/postDetails';
-import Lesson from '../pages/lesson/lesson';
+import NewPost from './newPost/newPost';
+import Community from './community/community';
+import PostDetails from './postDetails/postDetails';
+import Lesson from './lesson/lesson';
 import NewLesson from './newLesson/newLesson';
 import LessonDetails from './lessonDetails/lessonDetails';
 import Signin from './loginOrSignin/loginOrSignin';
+import UserDetails from './userDetails/userDetails'
 import Home from './home/home'
 
 const page = () => {
@@ -24,6 +25,7 @@ const page = () => {
             <Route path="/home" exact component={Home} />
             <Route path="/" exact component={Home} />
             <Route path='/signin' component={Signin} />
+            <Route path='/user' component={UserDetails} />
         </Layouts>
     )
 }

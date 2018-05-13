@@ -346,6 +346,7 @@ app.post('/api/login', (req,res) => {
     const password = userData.password
     mongooseModel.findOne({email:email}, (err, user)=>{
         if(err){
+            console.log(err.stack)
         }
         if(user){
             if(user.password === password){
@@ -357,4 +358,41 @@ app.post('/api/login', (req,res) => {
             res.send('invalid email')
         }
     })
+})
+
+app.post('/api/changeUserData', (req,res) => {
+    const profilePic = req.body.profilePic
+    const name = req.body.name
+    const password = req.body.password
+    const email = req.body.email
+    console.log(profilePic)
+    console.log(name)
+    console.log(password)
+    if(profilePic !== null && ''){
+        mongooseModel.findOneAndUpdate({email:email},{profilePic: profilePic},{new:true}, (err) => {
+            if(err){
+                console.log(err.stack)
+                res.send('fail')
+            }
+        })
+        res.send('success')
+    }
+    if(name !== null && ''){
+        mongooseModel.findOneAndUpdate({email:email},{name:name},{new:true},(err) => {
+            if(err){
+                console.log(err.stack)
+                res.send('fail')
+            }
+        })
+        res.send('success')
+    }
+    if(password !== null && ''){
+        mongooseModel.findOneAndUpdate({email:email},{password:password},{new:true},(err) => {
+            if(err){
+                console.log(err.stack)
+                res.send('fail')
+            }
+            res.send('success')
+        })
+    }
 })
