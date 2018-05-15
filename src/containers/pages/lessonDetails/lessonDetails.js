@@ -97,8 +97,7 @@ class LessonDetails extends Component {
     submitHandler = async() => {
         const time = Date.now()
         const comment = {
-            user: this.props.userData.name,
-            userProfile: this.props.userData.profilePic,
+            userEmail: this.props.userData.email,
             content: this.state.comment.content,
             time: time
         }

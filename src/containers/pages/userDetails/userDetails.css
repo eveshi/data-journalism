@@ -103,7 +103,16 @@
     margin-top: 20px;
     color: #da7e7e;
     font-weight: lighter;
-    font-weight: bold;
-    
+    font-weight: bold;   
+}
+
+.detailContent{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.detailBox{
+    border: 0.5px solid grey;
 }
 

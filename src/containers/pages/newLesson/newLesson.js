@@ -42,11 +42,8 @@ class NewLesson extends Component{
         time:{
             value: null,
         },
-        user:{
-            value: '',
-        },
-        userProfile: {
-            value: '',
+        userEmail:{
+            value:'',
         },
         liked: {
             value: 0,
@@ -74,8 +71,7 @@ class NewLesson extends Component{
             lessonElement[key] = this.state[key].value
             lesson = {...lesson, ...lessonElement}
         }
-        lesson.user = this.props.userData.name
-        lesson.userProfile = this.props.userData.profilePic
+        lesson.userEmail = this.props.userData.email
         const timeNow = Date.now()
         lesson.time = timeNow
         if(lesson.titlePic === ''){

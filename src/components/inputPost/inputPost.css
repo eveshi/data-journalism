@@ -1,6 +1,13 @@
 input{
-    width: 60%;
-    margin: 5px auto;
+    margin: 10px;
+    height: 25px;
+    font-size: 14px;
+    border-bottom: 1.3px solid grey;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    width: 200px;
+    background-color: transparent;
 }
 
 .inputBox{

@@ -2,3 +2,14 @@
     background-color: #eeeeee;
     cursor: pointer;
 }
+
+.button{
+    width: 30%;
+    background-color: transparent;
+    border-radius: 5px;
+    box-shadow: 0.5px 1px 0.5px grey;
+    margin-top: 20px;
+    font-weight: lighter;
+    font-weight: bold;
+    cursor: pointer;
+}

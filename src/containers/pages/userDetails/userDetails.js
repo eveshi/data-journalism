@@ -7,6 +7,7 @@ import UserProfile from '../../../components/profilePic/profilePic'
 import Button from '../../../components/button/button'
 import AlertBox from '../../../components/alertBox/alertBox'
 import Input from '../../../components/inputPost/inputPost'
+import Link from '../../../components/link/link'
 
 import ChangeData from '../../../assets/images/write.svg'
 import doneEnable from '../../../assets/images/ok_enable.svg'
@@ -60,10 +61,12 @@ class UserDetails extends Component {
         numberOfStared: null,
         numberOfLiked: null,
         numberOfPost: null,
-        showStared: null,
-        showLiked: null,
+        showStared: false,
+        showLiked: false,
+        showPost: true,
         userLiked:[],
         userStared:[],
+        userPost:[]
     }
 
     componentWillMount(){
@@ -85,13 +88,15 @@ class UserDetails extends Component {
             userPost: this.props.userData.post,
         }).then((response)=>{
             const data = response.data
+            console.log(data)
             this.setState({
                 profilePic: this.props.userData.profilePic,
                 numberOfLiked: numberOfLiked,
                 numberOfStared: numberOfStared,
                 numberOfPost: numberOfPost,
                 userLiked: data.userLikedDetails,
-                userStared: data.userStaredDetails
+                userStared: data.userStaredDetails,
+                userPost: data.userPostDetails
             })
         })
     }
@@ -267,17 +272,27 @@ class UserDetails extends Component {
         })
     }
 
+    showPostHandler = () => {
+        this.setState({
+            showPost: true,
+            showStared: false,
+            showLiked: false,
+        })
+    }
+
     showLikedHandler = () => {
         this.setState({
-            showLiked: ! this.state.showLiked,
+            showLiked: true,
             showStared: false,
+            showPost: false,
         })
     }
 
     showStaredHandler = () => {
         this.setState({
-            showStared: ! this.state.showStared,
+            showStared: true,
             showLiked: false,
+            showPost: false
         })
     }
 
@@ -330,13 +345,24 @@ class UserDetails extends Component {
                 canUserSubmit = null
             }
 
-        const likedForm = this.state.userLiked.map((item) => {
+            // const showDetail = (category, url) => {
+            //     console.log(category)
+            //     category.map((el) => {
+            //         console.log(el)
+            //         return(
+            //         <div key={el._id} className={classes.detailContent}>
+            //             <p>ok</p>
+            //             <Link to={url+el._id}>
+            //                 <p>{el.title}</p>
+            //                 <p>发布于{el.time}前</p>
+            //             </Link>
+            //         </div>
+            //         )
+            //     })
+            // }
 
-        })
-
-        const staredForm = this.state.userStared.map((item) => {
-
-        })
+            const postUrl = 'community/post?id='
+            const lessonUrl = '/lessons/lesson?id='
 
         return(
             <div className={classes.wholePage}>
@@ -373,19 +399,50 @@ class UserDetails extends Component {
                 </div>
                 <div className={classes.likedStaredPost}>
                     <Button name={'发布     '+this.state.numberOfPost}
-                        onClick={this.showStaredHandler}></Button>
+                        onClick={this.showPostHandler}
+                        style={this.state.showPost?
+                            {backgroundColor:'#e8e8e8', boxShadow:'none'}:null}></Button>
                     <Button name={'收藏     '+this.state.numberOfStared}
-                        onClick={this.showStaredHandler}></Button>
+                        onClick={this.showStaredHandler}
+                        style={this.state.showStared?
+                            {backgroundColor:'#e8e8e8', boxShadow:'none'}:null}></Button>
                     <Button name={'赞    '+this.state.numberOfLiked}
-                        onClick={this.showLikedHandler}></Button>
+                        onClick={this.showLikedHandler}
+                        style={this.state.showLiked?
+                            {backgroundColor:'#e8e8e8', boxShadow:'none'}:null}></Button>
                 </div>
-                {this.state.showStared?
-                    <div>
-                        {likedForm}
-                    </div>:null}
                 {this.state.showLiked?
-                    <div>
-                        {staredForm}
+                    <div className={classes.detailBox}>
+                        {this.state.userLiked.map((el) => {
+                            return(
+                            <div key={el._id} className={classes.detailContent}>
+                                <Link to={lessonUrl+el._id}>
+                                    <p>{el.title}</p>
+                                    <p>发布于{el.time}前</p>
+                                </Link>
+                            </div>)})}
+                    </div>:null}
+                {this.state.showStared?
+                    <div className={classes.detailBox}>
+                        {this.state.userStared.map((el) => {
+                            return(
+                            <div key={el._id} className={classes.detailContent}>
+                                <Link to={lessonUrl+el._id}>
+                                    <p>{el.title}</p>
+                                    <p>发布于{el.time}前</p>
+                                </Link>
+                            </div>)})}
+                    </div>:null}
+                {this.state.showPost?
+                    <div className={classes.detailBox}>
+                        {this.state.userPost.map((el) => {
+                            return(
+                            <div key={el._id} className={classes.detailContent}>
+                                <Link to={postUrl+el._id}>
+                                    <p>{el.title}</p>
+                                    <p>发布于{el.time}前</p>
+                                </Link>
+                            </div>)})}
                     </div>:null}
                 {this.state.save?
                     <AlertBox alertContent='修改成功' 

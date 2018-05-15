@@ -11,11 +11,7 @@ import classes from './newPost.css';
 class NewPost extends Component {
     state = {
         postData: {
-            user: {
-                inputType: null,
-                value: '',
-            },
-            userProfile: {
+            userEmail: {
                 inputType: null,
                 value: '',
             },
@@ -54,8 +50,7 @@ class NewPost extends Component {
 
     submitHandler = async() => {
         let postData = {...this.state.postData}
-        postData.user.value = this.props.userData.name
-        postData.userProfile.value = this.props.userData.profilePic
+        postData.userEmail.value = this.props.userData.email
         const time = Date.now()
         postData.time.value = time
         console.log(time)

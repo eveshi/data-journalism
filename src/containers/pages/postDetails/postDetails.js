@@ -20,7 +20,7 @@ class PostDetails extends Component {
         id: null,
         commentSubmitted: false,
         wordsCount: null,
-        unLoginAlert: false
+        unLoginAlert: false,
     }
 
     componentWillMount(){
@@ -65,37 +65,63 @@ class PostDetails extends Component {
         const time = Date.now()
 
         const commentWillSent = {
-            user: this.props.userData.name,
-            userProfile: this.props.userData.profilePic,
+            userEmail: this.props.userData.email,
             time: time,
             content: comment.content,
         }
         this.setState({
             commentSubmitted: true
         })
-        await axios.post('api/sendPostComment',{
+        await axios.post('/api/sendPostComment',{
             id: id,
             comment: commentWillSent,
             userEmail: this.props.userData.email
         })
     }
 
+    ifDelete = () => {
+        this.setState({
+            makeSureDelete: true
+        })
+    }
+
+    deletePost = async() => {
+        console.log('wow')
+        const id = this.state.id
+        const email = this.props.userData.email
+
+        await axios.post('/api/deletePost', {
+            id: id,
+            email: email
+        }).then((response) => {
+            console.log(response.data)
+            window.history.back()
+        })
+    }
+
     render(){
         const comment = this.state.comment
         const commentHtml = marked(comment.content)
+        let showDelete = null
 
         return(
             <div className={classes.postDetails}>
                 {this.state.post.map((el, index) => {
+                    showDelete = false
                     const content = marked(el.content)
-
+                    if((el.title)&&
+                    (el.user===this.props.userData.name)){
+                    showDelete = true
+                }
                     return <SingleContent
                         key={index}
                         userProfile={el.userProfile}
                         title={el.title}
                         userName={el.user}
                         updateTime={el.time}
-                        content={content} />
+                        content={content}
+                        onClick={this.deletePost}
+                        style={showDelete?null:{display:'none'}} />
                 })}
                 {this.props.login?
                     <div className={classes.commentBox}>

@@ -17,18 +17,17 @@ const mongoUrl = 'mongodb://localhost:27017/data-jour';
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/api/sendPost', (req, res) => {
+app.post('/api/sendPost', async(req, res) => {
     const post = req.body.mainContent
     const userEmail = req.body.userEmail
-    console.log(userEmail)
-    MongoClient.connect(mongoUrl, async(err, client) => {
+    await MongoClient.connect(mongoUrl, async(err, client) => {
         if(err){
             console.log(err.stack)
         }
         const db = client.db('data-jour');
         const addPost = await db.collection('posts').insertOne(post);
         assert.equal(1, addPost.insertedCount);
-        const changeUserData = db.collection('user').update(
+        const changeUserData = await db.collection('user').update(
             {email: userEmail},
             {
                 $push: {'post': addPost.ops[0]._id}
@@ -39,9 +38,9 @@ app.post('/api/sendPost', (req, res) => {
     })
 });
 
-app.post('/api/sendLesson',(req,res) => {
+app.post('/api/sendLesson',async(req,res) => {
     const lesson = req.body.lesson
-    MongoClient.connect(mongoUrl, async(err,client) => {
+    await MongoClient.connect(mongoUrl, async(err,client) => {
         if(err){
             console.log(err.stack)
         }
@@ -52,12 +51,12 @@ app.post('/api/sendLesson',(req,res) => {
     })
 });
 
-app.get('/api/getPost', (req, res) => {
+app.get('/api/getPost', async(req, res) => {
     const page = req.query.page
     const itemInEveryPage = req.query.itemInEveryPage
     const limit = parseInt(itemInEveryPage)
     const skip = (page-1)*itemInEveryPage
-    MongoClient.connect(mongoUrl, async(err, client) => {
+    await MongoClient.connect(mongoUrl, async(err, client) => {
         if(err){
             console.log(err.stack)
         }
@@ -67,18 +66,21 @@ app.get('/api/getPost', (req, res) => {
 
         client.close()
 
-        const postSentBack = postsSorted(postQuery)
+        const response = await getUserData(postQuery)
+
+        const postSentBack = postsSorted(response)
         const dataSentBack = {
             postSentBack,
             totalNumber: totalNumber
         }
+
         res.send((dataSentBack));
     })
 })
 
-app.get('/api/postDetails',(req, res) => {
+app.get('/api/postDetails',async(req, res) => {
     const id = req.query.id
-    MongoClient.connect(mongoUrl, async(err,client) => {
+    await MongoClient.connect(mongoUrl, async(err,client) => {
         if(err){
             console.log(err.stack)
         }
@@ -95,17 +97,20 @@ app.get('/api/postDetails',(req, res) => {
                 objectArray = [...objectArray, ...postsDetails.comment]
             }
         })
-        const postContent = postsSorted(objectArray,true)
+
+        const response = await getUserData(objectArray)
+
+        const postContent = postsSorted(response,true)
 
         res.send(postContent)
     })
 })
 
-app.post('/api/sendPostComment', (req,res) => {
+app.post('/api/sendPostComment', async(req,res) => {
     const id = req.body.id
     const comment = req.body.comment
     const userEmail = req.body.userEmail
-    MongoClient.connect(mongoUrl, async(err, client) => {
+    await MongoClient.connect(mongoUrl, async(err, client) => {
         if(err){
             console.log(err.stack)
         }
@@ -131,10 +136,35 @@ app.post('/api/sendPostComment', (req,res) => {
     })
 })
 
-app.get('/api/getLesson',(req,res) => {
+app.post('/api/deletePost', async(req,res) => {
+    const id = req.body.id
+    const email = req.body.email
+
+    await MongoClient.connect(mongoUrl, async(err,client) => {
+        if(err){
+            console.log(err.stack)
+        }
+
+        const db = client.db('data-jour')
+
+        const deletePost = await db.collection('posts').deleteOne({_id:MongoID(id)})
+        const deletePostInUser = await db.collection('user').update(
+            {email:email},
+            {
+                $pull:{post:MongoID(id)}
+            }
+        )
+
+        client.close()
+
+        res.send('success')
+    })
+})
+
+app.get('/api/getLesson',async(req,res) => {
     const page = req.query.page
     const skip = page*5
-    MongoClient.connect(mongoUrl, async(err,client) => {
+    await MongoClient.connect(mongoUrl, async(err,client) => {
         if(err){
             console.log(res.stack)
         }
@@ -143,16 +173,18 @@ app.get('/api/getLesson',(req,res) => {
         const lessonQuery = await db.collection('lessons').find().sort({_id:-1}).skip(skip).limit(5).toArray()
         client.close()
 
-        const lessonsQuerySorted = postsSorted(lessonQuery)
+        const response = await getUserData(lessonQuery)
+
+        const lessonsQuerySorted = postsSorted(response)
 
         res.send(lessonsQuerySorted)
     })
 })
 
-app.get('/api/getLessonDetails',(req,res) => {
+app.get('/api/getLessonDetails',async(req,res) => {
     const id = req.query.id
 
-    MongoClient.connect(mongoUrl, async(err,client) => {
+    await MongoClient.connect(mongoUrl, async(err,client) => {
         if(err){
             console.log(err.stack)
         }
@@ -170,16 +202,18 @@ app.get('/api/getLessonDetails',(req,res) => {
                 lessonDetailsToArray= [...lessonDetailsToArray, ...lessonDetails.comment]
             }
         })
-        const lessonRecieved= postsSorted(lessonDetailsToArray,true)
+
+        const response = await getUserData(lessonDetailsToArray)
+        const lessonRecieved= postsSorted(response,true)
 
         res.send(lessonRecieved)
     })
 })
 
-app.post('/api/sendLessonComment', (req,res) => {
+app.post('/api/sendLessonComment', async(req,res) => {
     const id = req.body.id
     const comment = req.body.comment
-    MongoClient.connect(mongoUrl, (err,client) => {
+    await MongoClient.connect(mongoUrl, (err,client) => {
         if(err){
             console.log(err.stack)
         }
@@ -196,13 +230,13 @@ app.post('/api/sendLessonComment', (req,res) => {
     })
 })
 
-app.get('/api/updateLikeAndStar', (req,res) => {
+app.get('/api/updateLikeAndStar', async(req,res) => {
     const liked = req.query.liked
     const stared = req.query.stared
     const id = req.query.id
     const userEmail = req.query.userEmail
     const increaseFlag = req.query.increaseFlag
-    MongoClient.connect(mongoUrl, async(err,client) => {
+    await MongoClient.connect(mongoUrl, async(err,client) => {
         if(err){
             console.log(err.stack)
         }
@@ -263,7 +297,6 @@ app.get('/api/updateLikeAndStar', (req,res) => {
         const userData = await db.collection('user').findOne({
             email: userEmail
         })
-        console.log(userData)
 
         client.close()
 
@@ -273,11 +306,26 @@ app.get('/api/updateLikeAndStar', (req,res) => {
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
+const getUserData = async(request) => {
+    let newPostQuery = []
+    for(const item of request){
+        await mongooseModel.findOne({email:item.userEmail}, (err, user) => {
+            const newPost = {
+                ...item, 
+                user: user.name,
+                userProfile: user.profilePic }
+            newPostQuery.push(newPost)
+        })
+    }
+    return newPostQuery
+}
+
 const postsSorted = (postsUnsorted, ifForDetailPage) => {
+    console.log(postsUnsorted)
     let postsSorted = []
     postsUnsorted.map((el,index) => {
         let time = null
-        if(el.user){
+        if(el.user || el.userEmail){
             if(ifForDetailPage){
                 const timestamp = parseInt(el.time)
                 time = new Date(timestamp).toLocaleDateString() + " " + new Date(timestamp).toLocaleTimeString()
@@ -316,19 +364,22 @@ const postsSorted = (postsUnsorted, ifForDetailPage) => {
                 id: el._id,
                 time: time,
             }
-
+            console.log(postElement)
             postsSorted.push(postElement)
+            console.log('ufu')
+            console.log(postsSorted)
         }
     })
+    console.log(postsSorted)
     return postsSorted
 }
 
 //userSignin
 
-app.post('/api/signin',(req,res) => {
+app.post('/api/signin',async(req,res) => {
     const userData = req.body.newUser
     const email=userData.email
-    mongooseModel.findOne({email:email}, (err, user)=>{
+    await mongooseModel.findOne({email:email}, (err, user)=>{
         if(err){
             console.log(err.stack)
         }
@@ -345,11 +396,11 @@ app.post('/api/signin',(req,res) => {
     })
 })
 
-app.post('/api/login', (req,res) => {
+app.post('/api/login', async(req,res) => {
     const userData = req.body.oldUser
     const email = userData.email
     const password = userData.password
-    mongooseModel.findOne({email:email}, (err, user)=>{
+    await mongooseModel.findOne({email:email}, (err, user)=>{
         if(err){
             console.log(err.stack)
         }
@@ -365,7 +416,7 @@ app.post('/api/login', (req,res) => {
     })
 })
 
-app.post('/api/getUserLikeStaredPost', (req,res) => {
+app.post('/api/getUserLikeStaredPost', async(req,res) => {
     const userLiked = req.body.userLiked
     const userStared = req.body.userStared
     const userPost = req.body.userPost
@@ -386,16 +437,18 @@ app.post('/api/getUserLikeStaredPost', (req,res) => {
         })
     }
     if(userPost !== '' && userPost !== undefined){
+        console.log(userPost)
         newUserPostArray = []
         userPost.map((item) => {
             newUserPostArray.push(MongoID(item))
         })
     }
-    MongoClient.connect(mongoUrl, async(err,client) =>{
+    await MongoClient.connect(mongoUrl, async(err,client) =>{
         if(err){
             console.log(err.stack)
         }
 
+        console.log('enter')
         let userLikedDetails = []
         let userStaredDetails = []
         let userPostDetails = []
@@ -423,27 +476,31 @@ app.post('/api/getUserLikeStaredPost', (req,res) => {
         }
         client.close()
 
-        console.log(userLikedDetails)
-        console.log(userStaredDetails)
+        console.log(userPostDetails)
+
+        const newLiked = postsSorted(userLikedDetails)
+        const newStared = postsSorted(userStaredDetails)
+        const newPost = postsSorted(userPostDetails)
 
         const sendBackObject = {
-            userLikedDetails: userLikedDetails,
-            userStaredDetails: userStaredDetails,
-            userPostDetails: userPostDetails
+            userLikedDetails: newLiked,
+            userStaredDetails: newStared,
+            userPostDetails: newPost
         }
+        console.log(sendBackObject)
 
         res.send(sendBackObject)
         
     })
 })
 
-app.post('/api/changeUserData', (req,res) => {
+app.post('/api/changeUserData', async(req,res) => {
     const profilePic = req.body.profilePic
     const name = req.body.name
     const password = req.body.password
     const email = req.body.email
     if(profilePic !== undefined && profilePic !== ''){
-        mongooseModel.findOneAndUpdate({email:email},{profilePic: profilePic},{new:true}, (err,user) => {
+        await mongooseModel.findOneAndUpdate({email:email},{profilePic: profilePic},{new:true}, (err,user) => {
             if(err){
                 console.log(err.stack)
                 res.send('fail')
@@ -452,7 +509,7 @@ app.post('/api/changeUserData', (req,res) => {
         }) 
     }
     if(name !== undefined && name !== ''){
-        mongooseModel.findOneAndUpdate({email:email},{name:name},{new:true},(err,user) => {
+        await mongooseModel.findOneAndUpdate({email:email},{name:name},{new:true},(err,user) => {
             if(err){
                 console.log(err.stack)
                 res.send('fail')
@@ -461,7 +518,7 @@ app.post('/api/changeUserData', (req,res) => {
         })
     }
     if(password !== undefined && password !== ''){
-        mongooseModel.findOneAndUpdate({email:email},{password:password},{new:true},(err,user) => {
+        await mongooseModel.findOneAndUpdate({email:email},{password:password},{new:true},(err,user) => {
             if(err){
                 console.log(err.stack)
                 res.send('fail')
