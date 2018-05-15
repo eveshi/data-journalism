@@ -8,8 +8,9 @@ import Lesson from './lesson/lesson';
 import NewLesson from './newLesson/newLesson';
 import LessonDetails from './lessonDetails/lessonDetails';
 import Signin from './loginOrSignin/loginOrSignin';
-import UserDetails from './userDetails/userDetails'
-import Home from './home/home'
+import UserDetails from './userDetails/userDetails';
+import Home from './home/home';
+import About from './about/about'
 
 const page = () => {
     return (
@@ -26,6 +27,7 @@ const page = () => {
             <Route path="/" exact component={Home} />
             <Route path='/signin' component={Signin} />
             <Route path='/user' component={UserDetails} />
+            <Route path='/about' component={About} />
         </Layouts>
     )
 }

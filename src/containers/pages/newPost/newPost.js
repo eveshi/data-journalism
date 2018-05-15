@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import * as actions from '../../../store/action/index'
 import axios from '../../../axios_data';
 import Button from '../../../components/button/button'
 import marked from 'marked';
@@ -53,7 +54,6 @@ class NewPost extends Component {
         postData.userEmail.value = this.props.userData.email
         const time = Date.now()
         postData.time.value = time
-        console.log(time)
         let postWillBeSent = {}
         for (let key in postData) {
             let postElement = {}
@@ -67,6 +67,8 @@ class NewPost extends Component {
             mainContent: postWillBeSent,
             userEmail: this.props.userData.email
         })
+        const userData = request.data
+        this.props.loginSuccessfully(userData)
     }
 
     changeHandler = (event, key) => {
@@ -131,4 +133,10 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(NewPost);
+const mapActionsToProps = dispatch => {
+    return {
+        loginSuccessfully: (userData) => dispatch(actions.loginSuccessfully(userData))     
+    }
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(NewPost);

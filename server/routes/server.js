@@ -4,6 +4,7 @@ let bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const MongoID = require('mongodb').ObjectId;
 const mongooseModel = require('../models/user')
+const bcrypt = require('react-native-bcrypt')
 
 const assert = require('assert');
 const co = require('co');
@@ -34,7 +35,10 @@ app.post('/api/sendPost', async(req, res) => {
             },
             {upsert: true}
         )
+        const userData = await db.collection('user').findOne({email: userEmail})
         client.close()
+
+        res.send(userData)
     })
 });
 
@@ -405,7 +409,7 @@ app.post('/api/login', async(req,res) => {
             console.log(err.stack)
         }
         if(user){
-            if(user.password === password){
+            if(bcrypt.compareSync(password, user.password)){
                 res.send(user)
             }else{
                 res.send('wrong password')
@@ -448,7 +452,6 @@ app.post('/api/getUserLikeStaredPost', async(req,res) => {
             console.log(err.stack)
         }
 
-        console.log('enter')
         let userLikedDetails = []
         let userStaredDetails = []
         let userPostDetails = []
@@ -458,25 +461,23 @@ app.post('/api/getUserLikeStaredPost', async(req,res) => {
                 _id: {
                     $in: newUserLikedArray
                 }
-            }).toArray()
+            }).sort({_id:-1}).toArray()
         }
         if(newUserStaredArray !== null){
             userStaredDetails = await db.collection('lessons').find({
                 _id:{
                     $in: newUserStaredArray
                 }
-            }).toArray()
+            }).sort({_id:-1}).toArray()
         }
         if(newUserPostArray !== null){
             userPostDetails = await db.collection('posts').find({
                 _id:{
                     $in: newUserPostArray
                 }
-            }).toArray()
+            }).sort({_id:-1}).toArray()
         }
         client.close()
-
-        console.log(userPostDetails)
 
         const newLiked = postsSorted(userLikedDetails)
         const newStared = postsSorted(userStaredDetails)
@@ -487,7 +488,6 @@ app.post('/api/getUserLikeStaredPost', async(req,res) => {
             userStaredDetails: newStared,
             userPostDetails: newPost
         }
-        console.log(sendBackObject)
 
         res.send(sendBackObject)
         

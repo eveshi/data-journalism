@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from '../../../axios_data';
+import bcrypt from 'react-native-bcrypt';
 
 import Input from '../../../components/inputPost/inputPost'
 import Button from '../../../components/button/button'
@@ -86,6 +87,7 @@ class LoginOrSignin extends Component {
         loginFail: null,
         signinFail: null,
         signinSuccess: null,
+        hashRounds: 10,
     }
 
     changeHandler = (event, dataSource, key) => {
@@ -216,10 +218,17 @@ class LoginOrSignin extends Component {
     signinSubmitHandler = () => {
         let signinData = {}
         let newUser = {}
+        const salt = bcrypt.genSaltSync(this.state.hashRounds)
         Object.assign(signinData, this.state.signinData)
         Object.keys(signinData).map((key) => {
-            const item = {[key]: signinData[key].value}
-            newUser={...newUser, ...item}
+            if(key === 'password'){
+                const password = bcrypt.hashSync(signinData.password.value, salt)
+                const item = {password: password}
+                newUser={...newUser, ...item}
+            }else{
+                const item = {[key]: signinData[key].value}
+                newUser={...newUser, ...item}
+            }
         })
         axios.post('/api/signin', {
             newUser: newUser
@@ -277,7 +286,7 @@ class LoginOrSignin extends Component {
     }
 
     signinSuccessComfirm = () => {
-        window.history.back()
+        window.location.reload()
     }
 
     render(){
@@ -357,7 +366,7 @@ class LoginOrSignin extends Component {
                         goBackTo=''
                         onClick={this.signinFailComfirm} />:null}
                 {this.state.signinSuccess === true?
-                    <AlertBox alertContent='注册成功，返回上一界面' 
+                    <AlertBox alertContent='注册成功，重新登录' 
                         nextStep='确定'
                         goBackTo=''
                         onClick={this.signinSuccessComfirm} />:null}               

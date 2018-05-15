@@ -66,7 +66,11 @@ class UserDetails extends Component {
         showPost: true,
         userLiked:[],
         userStared:[],
-        userPost:[]
+        userPost:[],
+        postInAPage: 7,
+        currentPageOfStared: 1,
+        currentPageOfLiked: 1,
+        currentPageOfPost: 1,
     }
 
     componentWillMount(){
@@ -296,7 +300,87 @@ class UserDetails extends Component {
         })
     }
 
+    loadmore = (category) => {
+        switch(category){
+            case 'liked':
+                this.setState({
+                    currentPageOfLiked: this.state.currentPageOfLiked + 1
+                });
+                break;
+            case 'stared':
+                this.setState({
+                    currenPageOfStared: this.state.currentPageOfStared + 1
+                });
+                break;
+            case 'post':
+                this.setState({
+                    currentPageOfPost: this.state.currentPageOfPost + 1
+                });
+                break;
+            default:
+             break;
+        }
+    }
+
     render(){
+        let canUserSubmit = 'disabled'
+
+        const postUrl = 'community/post?id='
+        const lessonUrl = '/lessons/lesson?id='
+
+        let isMoreLiked = null
+        let isMoreStared = null
+        let isMorePost = null
+
+        let currentLikedArray = []
+        let currentStaredArray = []
+        let currentPostArray = []
+
+        const numbersOfLikedOnShow = this.state.currentPageOfLiked*this.state.postInAPage
+        const numbersOfStaredOnShow = this.state.currenPageOfStared*this.state.postInAPage
+        const numbersOfPostOnShow = this.state.currentPageOfPost*this.state.postInAPage
+
+        if((this.state.userDataForm.name.isUpToStandard !== false &&
+            this.state.userDataForm.password.isUpToStandard !== false &&
+            this.state.userDataForm.passwordRepeated.isUpToStandard !== false) &&
+            (this.state.userDataForm.name.isUpToStandard !== null || 
+            this.state.userDataForm.password.isUpToStandard !== null ||
+            this.state.userDataForm.passwordRepeated.isUpToStandard !== null)&&
+            (this.state.userDataForm.name.value !== '' || 
+            this.state.userDataForm.password.value !== '' ||
+            this.state.userDataForm.passwordRepeated.value !== '') &&
+            (this.state.userDataForm.password.isUpToStandard ===
+            this.state.userDataForm.passwordRepeated.isUpToStandard)){
+                canUserSubmit = null
+            }
+
+        if( numbersOfLikedOnShow < this.state.numberOfLiked){
+            isMoreLiked = true
+            currentLikedArray = this.state.userLiked.slice(0, numbersOfLikedOnShow)
+        }else{
+            isMoreLiked = false
+            currentLikedArray = this.state.userLiked
+        }
+
+        if( numbersOfStaredOnShow < this.state.numberOfStared){
+            isMoreStared = true
+            currentStaredArray = this.state.userStared.slice(0, numbersOfStaredOnShow)
+        }else{
+            isMoreStared = false
+            currentStaredArray = this.state.userStared
+        }
+
+        if( numbersOfPostOnShow < this.state.numberOfPost){
+            console.log(numbersOfPostOnShow)
+            console.log(this.state.numberOfPost)
+            isMorePost = true
+            currentPostArray = this.state.userPost.slice(0, numbersOfPostOnShow)
+            console.log(currentPostArray)
+        }else{
+            isMorePost = false
+            currentPostArray = this.state.userPost
+        }
+
         const changeProfileForm = this.state.profileForm.map((profilePic) => {
             return(
                 <button key={profilePic}
@@ -328,41 +412,6 @@ class UserDetails extends Component {
                         null} 
                 </div>)
         })
-
-        let canUserSubmit = 'disabled'
-
-        if((this.state.userDataForm.name.isUpToStandard !== false &&
-            this.state.userDataForm.password.isUpToStandard !== false &&
-            this.state.userDataForm.passwordRepeated.isUpToStandard !== false) &&
-            (this.state.userDataForm.name.isUpToStandard !== null || 
-            this.state.userDataForm.password.isUpToStandard !== null ||
-            this.state.userDataForm.passwordRepeated.isUpToStandard !== null)&&
-            (this.state.userDataForm.name.value !== '' || 
-            this.state.userDataForm.password.value !== '' ||
-            this.state.userDataForm.passwordRepeated.value !== '') &&
-            (this.state.userDataForm.password.isUpToStandard ===
-            this.state.userDataForm.passwordRepeated.isUpToStandard)){
-                canUserSubmit = null
-            }
-
-            // const showDetail = (category, url) => {
-            //     console.log(category)
-            //     category.map((el) => {
-            //         console.log(el)
-            //         return(
-            //         <div key={el._id} className={classes.detailContent}>
-            //             <p>ok</p>
-            //             <Link to={url+el._id}>
-            //                 <p>{el.title}</p>
-            //                 <p>发布于{el.time}前</p>
-            //             </Link>
-            //         </div>
-            //         )
-            //     })
-            // }
-
-            const postUrl = 'community/post?id='
-            const lessonUrl = '/lessons/lesson?id='
 
         return(
             <div className={classes.wholePage}>
@@ -413,7 +462,7 @@ class UserDetails extends Component {
                 </div>
                 {this.state.showLiked?
                     <div className={classes.detailBox}>
-                        {this.state.userLiked.map((el) => {
+                        {currentLikedArray.map((el) => {
                             return(
                             <div key={el._id} className={classes.detailContent}>
                                 <Link to={lessonUrl+el._id}>
@@ -421,10 +470,15 @@ class UserDetails extends Component {
                                     <p>发布于{el.time}前</p>
                                 </Link>
                             </div>)})}
+                            {isMoreLiked?
+                                <Button
+                                    name='加载更多' 
+                                    onClick={() => this.loadmore('liked')}/>:
+                                <p className={classes.noMoreLoad}>没有更多了</p>}
                     </div>:null}
                 {this.state.showStared?
                     <div className={classes.detailBox}>
-                        {this.state.userStared.map((el) => {
+                        {currentStaredArray.map((el) => {
                             return(
                             <div key={el._id} className={classes.detailContent}>
                                 <Link to={lessonUrl+el._id}>
@@ -432,17 +486,27 @@ class UserDetails extends Component {
                                     <p>发布于{el.time}前</p>
                                 </Link>
                             </div>)})}
+                            {isMoreStared?
+                                <Button
+                                    name='加载更多' 
+                                    onClick={() =>this.loadmore('stared')}/>:
+                                <p className={classes.noMoreLoad}>没有更多了</p>}
                     </div>:null}
                 {this.state.showPost?
                     <div className={classes.detailBox}>
-                        {this.state.userPost.map((el) => {
+                        {currentPostArray.map((el) => {
                             return(
                             <div key={el._id} className={classes.detailContent}>
                                 <Link to={postUrl+el._id}>
-                                    <p>{el.title}</p>
-                                    <p>发布于{el.time}前</p>
+                                    <p className={classes.title}>{el.title}</p>
+                                    <p className={classes.time}>发布于{el.time}前</p>
                                 </Link>
                             </div>)})}
+                            {isMorePost?
+                                <Button
+                                    name='加载更多' 
+                                    onClick={() => this.loadmore('post')}/>:
+                                <p className={classes.noMoreLoad}>没有更多了</p>}
                     </div>:null}
                 {this.state.save?
                     <AlertBox alertContent='修改成功' 
