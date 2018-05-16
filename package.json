@@ -5,7 +5,7 @@
   "scripts": {
     "client": "node scripts/start.js",
     "server": "node server/routes/server.js",
-    "start": "npm run client",
+    "start": "npm run server",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js —env=jsdom",
     "install": "npm run build"
