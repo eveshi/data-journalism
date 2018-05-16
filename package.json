@@ -5,7 +5,7 @@
   "scripts": {
     "client": "node scripts/start.js",
     "server": "node server/routes/server.js",
-    "start": "node src/index.js",
+    "start": "npm run server",
     "heroku-postbuild": "npm install --only=dev && npm install && npm run build",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js —env=jsdom"
