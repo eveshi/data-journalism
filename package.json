@@ -8,7 +8,8 @@
     "start": "npm run server",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js —env=jsdom",
-    "install": "npm run build"
+    "install": "npm run build",
+    "postinstall": "bower install && gulp build"
   },
   "dependencies": {
     "autoprefixer": "^7.1.6",
