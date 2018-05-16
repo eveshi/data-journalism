@@ -5,6 +5,7 @@ const MongoClient = require('mongodb').MongoClient;
 const MongoID = require('mongodb').ObjectId;
 const mongooseModel = require('../models/user')
 const bcrypt = require('react-native-bcrypt')
+const path = require('path')
 
 const assert = require('assert');
 const co = require('co');
@@ -12,7 +13,13 @@ const co = require('co');
 const app = express();
 console.log('PORT:', process.env.PORT);
 const port = process.env.PORT || 8080;
-app.use(express.static(__dirname + '/build'));
+app.use(express.static(path.join(__dirname, '../../build')));
+
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, '../../build', 'index.html'));
+});
+
+
 const mongoUrl = 'mongodb+srv://eveshi:woaiCHINA52c!@cluster0-tdf3l.mongodb.net/data-jour';
 
 app.use(cors());
