@@ -181,7 +181,9 @@ class LessonDetails extends Component {
                 increaseFlag: increaseFlag}
         })
         const userData = response.data
-        this.props.loginSuccessfully(userData)
+        if(this.props.login === true){
+            this.props.loginSuccessfully(userData)
+        } 
     }
 
     render(){
@@ -213,6 +215,7 @@ class LessonDetails extends Component {
                             src={this.state.picUrl} 
                             alt='title'/>:null}
                 {this.state.content.map((content) => {
+                    const contentDisplay = marked(content.content)
                     return(
                         <SingleContent
                             key={content.key}
@@ -220,7 +223,7 @@ class LessonDetails extends Component {
                             userName={content.user}
                             title={content.title}
                             updateTime={content.time}
-                            content={content.content} />
+                            content={contentDisplay} />
                     )
                 })}
                 {this.props.login?

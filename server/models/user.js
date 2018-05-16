@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb://localhost:27017/data-jour');
+mongoose.connect('mongodb+srv://eveshi:woaiCHINA52c!@cluster0-tdf3l.mongodb.net/data-jour');
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));

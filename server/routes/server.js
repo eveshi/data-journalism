@@ -13,7 +13,7 @@ const app = express();
 console.log('PORT:', process.env.PORT);
 const port = process.env.PORT || 8080;
 app.use(express.static(__dirname + '/build'));
-const mongoUrl = 'mongodb://localhost:27017/data-jour';
+const mongoUrl = 'mongodb+srv://eveshi:woaiCHINA52c!@cluster0-tdf3l.mongodb.net/data-jour';
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));

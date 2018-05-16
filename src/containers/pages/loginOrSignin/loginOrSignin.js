@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from '../../../axios_data';
-import bcrypt from 'react-native-bcrypt';
+import bcrypt from 'bcryptjs';
 
 import Input from '../../../components/inputPost/inputPost'
 import Button from '../../../components/button/button'
