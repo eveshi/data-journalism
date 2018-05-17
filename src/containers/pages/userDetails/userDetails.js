@@ -326,7 +326,7 @@ class UserDetails extends Component {
         let canUserSubmit = 'disabled'
 
         const postUrl = 'community/post?id='
-        const lessonUrl = '/lessons/lesson?id='
+        const lessonUrl = 'lessons/lesson?id='
 
         let isMoreLiked = null
         let isMoreStared = null
