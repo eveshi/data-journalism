@@ -19,7 +19,8 @@ const headline = (props) => {
     return(
         <div className={classes.headline} style={props.order%2===0?{backgroundColor:'rgba(206, 234, 234, 0.41)'}:{backgroundColor:'white'}}>
             <img src={headlinePic} alt='headline' />
-            <p>{props.headline}</p>
+            <div dangerouslySetInnerHTML={ {__html: props.headline} }
+                            className={classes.headlineContent} />
         </div>
     )
 };

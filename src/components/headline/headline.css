@@ -2,15 +2,17 @@
     display: flex;
     width: 100%;
     height: 400px;
+    align-items: center;
 }
 
 .headline img{
-    width: 100px;
+    width: 80px;
     margin: auto auto auto 15%;
 }
 
-.headline p{
-    margin: auto 15% auto 30px;
+.headline div{
+    margin-right: 15%;
+    width: 40%;
 }
 
 @media(min-width: 800px){

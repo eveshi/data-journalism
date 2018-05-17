@@ -1,6 +1,7 @@
 .home{
     position: absolute;
     top: 48px;
+    font-size: 12px;
 }
 
 @media(min-width: 800px){
