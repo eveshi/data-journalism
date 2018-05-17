@@ -466,8 +466,8 @@ class UserDetails extends Component {
                             return(
                             <div key={el._id} className={classes.detailContent}>
                                 <Link to={lessonUrl+el._id}>
-                                    <p>{el.title}</p>
-                                    <p>发布于{el.time}前</p>
+                                    <p className={classes.title}>{el.title}</p>
+                                    <p className={classes.time}>发布于{el.time}前</p>
                                 </Link>
                             </div>)})}
                             {isMoreLiked?
@@ -482,8 +482,8 @@ class UserDetails extends Component {
                             return(
                             <div key={el._id} className={classes.detailContent}>
                                 <Link to={lessonUrl+el._id}>
-                                    <p>{el.title}</p>
-                                    <p>发布于{el.time}前</p>
+                                    <p className={classes.title}>{el.title}</p>
+                                    <p className={classes.time}>发布于{el.time}前</p>
                                 </Link>
                             </div>)})}
                             {isMoreStared?
