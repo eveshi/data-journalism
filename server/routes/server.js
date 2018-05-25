@@ -6,6 +6,8 @@ const MongoID = require('mongodb').ObjectId;
 const mongooseModel = require('../models/user')
 const bcrypt = require('react-native-bcrypt')
 const path = require('path')
+const captchapng = require('captchapng')
+const session = require('express-session')
 
 const assert = require('assert');
 const co = require('co');
@@ -533,4 +535,42 @@ app.post('/api/changeUserData', async(req,res) => {
             res.send(user)
         })
     }
+})
+
+//verification code
+
+app.use(session({
+    secret: 'dog cat',
+    resave: true,
+    saveUninitialized: true,
+    cookie: ({ maxAge: 60000 })
+}))
+
+app.get('/api/verificationCode', (req,res) => {
+    const code = req.query.code
+    console.log(req.session)
+    console.log(code)
+    if(code === req.session.checkcode){
+        console.log('true')
+        res.send('success')
+    }else{
+        console.log('fail')
+        res.send('fail')
+    }
+})
+
+app.get('/verifiedPic', (req,res) => {
+    console.log('get')
+    let code = parseInt(Math.random() * 9000 + 1000);
+    req.session.checkcode = code
+    console.log(req.session)
+    let p = new captchapng(90, 36, code);
+    p.color(0, 0, 0, 0);
+    p.color(80, 80, 80, 255);
+    let img = p.getBase64();
+    let imgbase64 = new Buffer.from(img, 'base64');
+    res.writeHead(200, {
+        'Content-Type': 'image/png'
+    });
+    res.end(imgbase64);
 })

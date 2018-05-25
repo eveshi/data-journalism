@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './containers/App/App';
 import registerServiceWorker from './registerServiceWorker';
-import axios from 'axios';
 
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';

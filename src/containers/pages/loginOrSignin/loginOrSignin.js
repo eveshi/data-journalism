@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import axios from '../../../axios_data';
 import bcrypt from 'bcryptjs';
 
+import VerificationCode from '../../../components/verificationCode/verificationCode'
 import Input from '../../../components/inputPost/inputPost'
 import Button from '../../../components/button/button'
 import AlertBox from '../.././../components/alertBox/alertBox'
@@ -354,6 +355,7 @@ class LoginOrSignin extends Component {
                         {loginForms}
                     </form>
                     <Button name='登录数据新闻网' onClick={this.loginSubmitHandler} />
+                    <VerificationCode />
                 </div>
                 {this.state.loginFail === true?
                     <AlertBox alertContent='邮箱或密码错误，请重试' 
