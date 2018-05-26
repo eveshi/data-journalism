@@ -4,13 +4,20 @@ import Input from '../inputPost/inputPost'
 
 class VerificationCode extends Component {
     state={
-        value: ''
+        value: '',
+        id: '',
+        url: '',
+    }
+
+    componentDidMount(){
+        console.log(document.cookie)
     }
 
     verifiedPic = () => {
-        axios.get('/api/verificationCode', {
+        axios.get('/verifiedPic', {
             params:{
-                code: this.state.value
+                code: this.state.value,
+                id: this.state.id
             }
         }).then(res=>{
             console.log(res.data)
@@ -21,7 +28,7 @@ class VerificationCode extends Component {
         let value = event.target.value
         console.log(value)
         this.setState({
-            value: value
+            value: value,
         })
     }
 
