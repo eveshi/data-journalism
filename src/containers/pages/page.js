@@ -9,6 +9,7 @@ import NewLesson from './newLesson/newLesson';
 import LessonDetails from './lessonDetails/lessonDetails';
 import Signin from './loginOrSignin/loginOrSignin';
 import UserDetails from './userDetails/userDetails';
+import ForgetPassword from './forgetPassword/forgetPassword'
 import Home from './home/home';
 import About from './about/about'
 
@@ -28,6 +29,7 @@ const page = () => {
             <Route path='/signin' component={Signin} />
             <Route path='/user' component={UserDetails} />
             <Route path='/about' component={About} />
+            <Route path='/forgetPassword' component={ForgetPassword} />
         </Layouts>
     )
 }

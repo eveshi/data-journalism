@@ -547,67 +547,73 @@ app.use(session({
     cookie: ({ secure:false, httpOnly:false })
 }))
 
-// app.get('/api/verificationCode', (req,res) => {
-//     const code = req.query.code
-//     console.log(req.session)
-//     console.log(req.session.id)
-//     console.log(code)
-//     if(code === req.session.checkcode){
-//         console.log('true')
-//         res.send('success')
-//     }else{
-//         console.log('fail')
-//         res.send('fail')
-//     }
-// })
+app.get('/api/verificationCode', (req,res) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+    res.header('Access-Control-Allow-Credentials', 'true')
+    const code = req.query.code
+    console.log(req.session)
+    console.log(req.session.id)
+    console.log(code)
+    if(parseInt(code) === req.session.checkcode){
+        console.log('true')
+        res.send('success')
+    }else{
+        console.log('fail')
+        res.send('fail')
+    }
+})
 
 app.get('/verifiedPic', (req,res) => {
-    const code = req.query.code
-    if(code !== undefined){
-        const code = req.query.code
-        console.log(req.session)
-        console.log(req.session.id)
-        console.log(code)
-        if(code === req.session.checkcode){
-            console.log('true')
-            res.send('success')
-        }else{
-            console.log('fail')
-            res.send('fail')
-        }
-    }else{
-        console.log('get')
-        let code = parseInt(Math.random() * 9000 + 1000);
-        req.session.checkcode = code
-        console.log(req.session)
-        console.log(req.session.id)
-        const id=req.session.id
-        let p = new captchapng(90, 36, code);
-        p.color(0, 0, 0, 0);
-        p.color(80, 80, 80, 255);
-        let img = p.getBase64();
-        let imgbase64 = new Buffer.from(img, 'base64');
-        res.writeHead(200, {
-            'Content-Type': 'image/png'
-        });
-        res.end(imgbase64);
-        console.log(req.session)
-    }
+    // res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+    // res.header('Access-Control-Allow-Credentials', 'true')
+    // const code = req.query.code
+    // if(code !== undefined){
+    //     console.log(req.session)
+    //     console.log(req.session.id)
+    //     console.log(code)
+    //     console.log(req.session.checkcode)
+    //     console.log(typeof(code))
+    //     console.log(typeof(req.session.checkcode))
+    //     if(parseInt(code) === req.session.checkcode){
+    //         console.log('true')
+    //         res.send('success')
+    //     }else{
+    //         console.log('fail')
+    //         res.send('fail')
+    //     }
+    // }else{
+    //     console.log('get')
+    //     let code = parseInt(Math.random() * 9000 + 1000);
+    //     req.session.checkcode = code
+    //     console.log(req.session)
+    //     console.log(req.session.id)
+    //     const id=req.session.id
+    //     let p = new captchapng(90, 36, code);
+    //     p.color(0, 0, 0, 0);
+    //     p.color(80, 80, 80, 255);
+    //     let img = p.getBase64();
+    //     let imgbase64 = new Buffer.from(img, 'base64');
+    //     res.writeHead(200, {
+    //         'Content-Type': 'image/png'
+    //     });
+    //     res.end(imgbase64);
+    //     console.log(req.session)
+    // }
 
-    // console.log('get')
-    // let code = parseInt(Math.random() * 9000 + 1000);
-    // req.session.checkcode = code
-    // console.log(req.session)
-    // console.log(req.session.id)
-    // const id=req.session.id
-    // let p = new captchapng(90, 36, code);
-    // p.color(0, 0, 0, 0);
-    // p.color(80, 80, 80, 255);
-    // let img = p.getBase64();
-    // let imgbase64 = new Buffer.from(img, 'base64');
-    // res.writeHead(200, {
-    //     'Content-Type': 'image/png'
-    // });
-    // res.end(imgbase64);
-    // console.log(session)
+    console.log('get')
+    let code = parseInt(Math.random() * 9000 + 1000);
+    req.session.checkcode = code
+    console.log(req.session)
+    console.log(req.session.id)
+    const id=req.session.id
+    let p = new captchapng(90, 36, code);
+    p.color(0, 0, 0, 0);
+    p.color(80, 80, 80, 255);
+    let img = p.getBase64();
+    let imgbase64 = new Buffer.from(img, 'base64');
+    res.writeHead(200, {
+        'Content-Type': 'image/png'
+    });
+    res.end(imgbase64);
+    console.log(session)
 })

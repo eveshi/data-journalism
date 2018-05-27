@@ -1,49 +1,15 @@
-import React, { Component}  from 'react'
-import axios from '../../axios_data'
+import React from 'react'
 import Input from '../inputPost/inputPost'
 
-class VerificationCode extends Component {
-    state={
-        value: '',
-        id: '',
-        url: '',
-    }
-
-    componentDidMount(){
-        console.log(document.cookie)
-    }
-
-    verifiedPic = () => {
-        axios.get('/verifiedPic', {
-            params:{
-                code: this.state.value,
-                id: this.state.id
-            }
-        }).then(res=>{
-            console.log(res.data)
-        })
-    }
-
-    inputChangeHandler = (event) => {
-        let value = event.target.value
-        console.log(value)
-        this.setState({
-            value: value,
-        })
-    }
-
-
-    render(){
-        return(
-            <div>
-                <Input inputType='text'
-                    value={this.state.value}
-                    change={(event) => this.inputChangeHandler(event)} />
-                <img src='http://localhost:8080/verifiedPic' alt='veri' />
-                <button onClick={this.verifiedPic}>yea</button>
-            </div>
-        )
-    }
+const verificationCode = (props) => {
+    return(
+        <div>
+            <Input inputType='text'
+                value={props.value}
+                change={props.onChange} />
+            <img src='http://localhost:8080/verifiedPic' alt='veri' />
+        </div>
+    )
 }
 
-export default VerificationCode
+export default verificationCode
