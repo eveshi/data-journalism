@@ -3,17 +3,19 @@ import axios from '../../../axios_data'
 import VerificationCode from '../../../components/verificationCode/verificationCode'
 import Input from '../../../components/inputPost/inputPost'
 import Button from '../../../components/button/button'
+import AlertBox from '../../../components/alertBox/alertBox'
 import classes from './forgetPassword.css'
-
-axios.defaults.withCredentials = true
 
 class ForgetPassword extends Component {
     state={
         verificationValue: '',
         emailValue: '',
+        verified: null,
+        refreshCode: false,
     }
 
     submit = () => {
+        axios.defaults.withCredentials = true
         axios.get('/api/verificationCode', {
             params:{
                 code: this.state.verificationValue,
@@ -23,28 +25,40 @@ class ForgetPassword extends Component {
             if(res.data === 'success'){
                 console.log(this.state.emailValue)
             }else{
-                console.log('fail')
+                this.setState({
+                    verified: false
+                })
             }
         })
     }
 
     verificationChangeHandler = (event) => {
-        const value = event.target.value
+        let value = event.target.value
+        console.log(value)
         this.setState({
             verificationValue: value,
         })
     }
 
     emailChangeHandler = (event) => {
-        const value = event.target.value
+        let value = event.target.value
         this.setState({
             emailValue: value,
         })
     }
 
-    changeCode = () => {
+    refreshCode = () => {
+        axios.get('/verifiedPic').then(
+            this.setState({
+                refreshCode: !this.state.refreshCode
+            })
+        )
+    }
+
+    confirmWrongCode = () => {
+        this.refreshCode()
         this.setState({
-            emailValue: ''
+            verified: null
         })
     }
 
@@ -53,12 +67,19 @@ class ForgetPassword extends Component {
             <div>
                 <VerificationCode 
                     value = {this.state.verificationValue}
-                    onChange = {(event) => this.verificationChangeHandler(event)}/>
-                <Button name='换一张' onClick={this.changeCode} />
+                    change = {(event) => this.verificationChangeHandler(event)}
+                    refresh={this.state.refreshCode} />
+                <Button name='换一张' onClick={this.refreshCode} />
                 <Input inputType='text'
                     value = {this.state.emailValue}
                     change = {(event) => this.emailChangeHandler(event)} />
                 <Button name='提交' onClick={this.submit} />
+                {this.state.verified === false?
+                    <AlertBox alertContent='验证码错误'
+                        goBackTo = ''
+                        nextStep='确定'
+                        onClick={this.confirmWrongCode} />:
+                    null}
             </div>
         )
     }

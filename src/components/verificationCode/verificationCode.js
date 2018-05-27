@@ -1,15 +1,30 @@
-import React from 'react'
+import React, { Component } from 'react'
 import Input from '../inputPost/inputPost'
 
-const verificationCode = (props) => {
-    return(
-        <div>
+class VerificationCode extends Component {
+    state={
+        randomNumber: 123456
+    }
+
+    componentWillUpdate(nextProps){
+        if(this.props.refresh !== nextProps.refresh){
+            this.setState({
+                randomNumber: Math.floor(Math.random()*100000)
+            })
+        }
+    }
+
+    render(){
+        return(
+            <div>
             <Input inputType='text'
-                value={props.value}
-                change={props.onChange} />
-            <img src='http://localhost:8080/verifiedPic' alt='veri' />
+                value={this.props.value}
+                change={this.props.change} />
+            <img src={'http://localhost:8080/verifiedPic?_='+this.state.randomNumber} 
+                alt='veri' />
         </div>
-    )
+        )
+    }
 }
 
-export default verificationCode
+export default VerificationCode

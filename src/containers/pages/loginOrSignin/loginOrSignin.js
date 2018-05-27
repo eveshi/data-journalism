@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs';
 import Input from '../../../components/inputPost/inputPost'
 import Button from '../../../components/button/button'
 import AlertBox from '../.././../components/alertBox/alertBox'
+import Link from '../../../components/link/link'
 import * as actions from '../../../store/action/index'
 import classes from './loginOrSignin.css'
 
@@ -354,6 +355,7 @@ class LoginOrSignin extends Component {
                         {loginForms}
                     </form>
                     <Button name='登录数据新闻网' onClick={this.loginSubmitHandler} />
+                    <Link to='/forgetPassword'>忘记密码</Link>
                 </div>
                 {this.state.loginFail === true?
                     <AlertBox alertContent='邮箱或密码错误，请重试' 
