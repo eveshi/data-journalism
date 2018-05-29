@@ -8,6 +8,7 @@ const bcrypt = require('react-native-bcrypt')
 const path = require('path')
 const captchapng = require('captchapng')
 const session = require('express-session')
+const nodemailer = require('nodemailer')
 
 const assert = require('assert');
 const co = require('co');
@@ -504,6 +505,8 @@ app.post('/api/getUserLikeStaredPost', async(req,res) => {
 })
 
 app.post('/api/changeUserData', async(req,res) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+    res.header('Access-Control-Allow-Credentials', 'true')
     const profilePic = req.body.profilePic
     const name = req.body.name
     const password = req.body.password
@@ -548,8 +551,6 @@ app.use(session({
 }))
 
 app.get('/api/verificationCode', (req,res) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
-    res.header('Access-Control-Allow-Credentials', 'true')
     const code = req.query.code
     if(parseInt(code) === req.session.checkcode){
         res.send('success')
@@ -571,5 +572,77 @@ app.get('/verifiedPic', (req,res) => {
         'Content-Type': 'image/png'
     });
     res.end(imgbase64);
-    console.log(session)
+})
+
+app.get('/api/findEmail', async(req,res) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+    res.header('Access-Control-Allow-Credentials', 'true')
+    const email = req.query.email
+    console.log(email)
+    await mongooseModel.findOne({email:email}, (err, user) => {
+        if(err){
+            console.log(err.stack)
+        }
+
+        if(user){
+            res.send(true)
+        }else{
+            res.send(false)
+        }
+    })
+})
+
+app.post('/api/sendVerifiedEmail', (req,res) => {
+    const email = req.body.email
+    const verificationCode = Math.floor(Math.random()*900000+100000)
+    mongooseModel.findOneAndUpdate({email: email}, {other: {verificationCode: verificationCode}},(err, user) => {
+        if(err){
+            console.log(err.stack)
+        }
+
+        nodemailer.createTestAccount((err, account) => {
+            let transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 465,
+                secure: true,
+                auth: {
+                    user: 'datajour.china@gmail.com',
+                    pass: 'data1234jour'
+                }
+            })
+    
+            let mailOptions = {
+                from: '"data-jour" <datajour.china@gmail.com>', 
+                to: email, 
+                subject: '您好，欢迎登陆数据新闻网，这是您的验证码', 
+                text: '您的验证码为：'+verificationCode, 
+            };
+        
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    return console.log(error);
+                }else{
+                    res.send(true)
+                }
+                console.log('Message sent: %s', info.messageId);
+                console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+            });
+        })
+    })
+})
+
+app.post('/api/checkEmailCode', (req, res) => {
+    const code = req.body.code
+    const email = req.body.email
+    mongooseModel.findOne({email: email}, (err, user) => {
+        if(err){
+            console.log(err.stack)
+        }
+
+        if(parseInt(code) === user.other.verificationCode){
+            res.send(true)
+        }else{
+            res.send(false)
+        }
+    })
 })

@@ -9,6 +9,7 @@ import AlertBox from '../.././../components/alertBox/alertBox'
 import Link from '../../../components/link/link'
 import * as actions from '../../../store/action/index'
 import classes from './loginOrSignin.css'
+import { SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG } from 'constants';
 
 class LoginOrSignin extends Component {
     state={
@@ -83,6 +84,10 @@ class LoginOrSignin extends Component {
             category:{
                 inputType: null,
                 value: 'basic',
+            },
+            other:{
+                inputType: null,
+                value: {},
             }
         },
         loginFail: null,

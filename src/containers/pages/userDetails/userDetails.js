@@ -1,6 +1,7 @@
 import React,{ Component } from 'react'
 import { connect } from 'react-redux'
 import axios from '../../../axios_data'
+import bcrypt from 'bcryptjs'
 import * as actions from '../../../store/action/index'
 
 import UserProfile from '../../../components/profilePic/profilePic'
@@ -225,11 +226,13 @@ class UserDetails extends Component {
     }
 
     submitAllChanges = (profilePic, name, password) => {
-        console.log('aubmit')
+        console.log('submit')
+        const salt = bcrypt.genSaltSync(10)
+        const passwordHash = bcrypt.hashSync(password, salt)
         axios.post('/api/changeUserData', {
             profilePic: profilePic,
             name: name,
-            password: password,
+            password: passwordHash,
             email: this.props.userData.email
         }).then((response) => {
             const userData = response.data

@@ -41,6 +41,10 @@ const userModelSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  other: {
+    type: Object,
+    required: true,
+  }
 },{
   collection: 'user'
 })
