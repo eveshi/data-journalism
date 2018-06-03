@@ -63,4 +63,4 @@ typings/
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
-.ds_store
+.DS_Store
